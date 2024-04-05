@@ -4,25 +4,40 @@ import { defineModel, normalizeStyle } from "vue";
 const login = defineModel('login')
 const password = defineModel('password')
 
-async function consoleData() {
-    const data = await getData()
-    console.log(data)
-}
+
 async function updateData(login, password) {
     try {
-        const res = await fetch(`/api/user/:${login}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        })
-        console.log(res)
+        const res = await fetch(`http://localhost:5137/api/users/${login}`);
+        if (!res.ok) {
+            throw new Error('Błąd pobierania danych');
+        }
         const data = await res.json()
-        console.log(data)
-    } catch (error) {
-        console.log(error.message)
+        if (data.isFound === false) {
+            if (login !== null && login !== undefined && password !== null && password !== undefined) {
+                if (login.length >= 4 && password.length >= 4) {
+                    fetch('http://localhost:5137/api/users/'), {
+                        method: "POST",
+                        body: JSON.stringify({ login: login, password: password }),
+                        headers: {
+                            "Content-type": "application/json; charset=UTF-8"
+                        }
+                    }
+                } else {
+                    console.log("za mało liter")
+                }
+            }
+        }
+        if (data.login) {
+
+        }
+        console.log(await data)
     }
+    catch (error) {
+        console.log('error ', error.message)
+    }
+    resetModalValues
 }
+
 function resetModalValues() {
     login.value = null
     password.value = null
