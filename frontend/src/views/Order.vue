@@ -1,5 +1,4 @@
 <script setup>
-import Nav from "../components/Nav.vue"
 import { ref, defineModel } from "vue";
 const name = defineModel('name')
 const surname = defineModel('surname')
@@ -9,7 +8,6 @@ const id = defineModel('id')
 const start = defineModel('start')
 </script>
 <template>
-    <Nav></Nav>
     <form>
         <input type="text" v-model="name">
         <input type="text" v-model="surname">

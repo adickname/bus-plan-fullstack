@@ -1,6 +1,5 @@
 <script setup>
-import Nav from "../components/Nav.vue"
-import { defineModel, normalizeStyle } from "vue";
+import { defineModel } from "vue";
 const login = defineModel('login')
 const password = defineModel('password')
 
@@ -45,7 +44,6 @@ function resetModalValues() {
 
 </script>
 <template>
-    <Nav></Nav>
     <form>
         <label for="login">Enter your login</label>
         <input type="text" id="login" v-model="login">
