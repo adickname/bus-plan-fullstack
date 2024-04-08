@@ -8,21 +8,21 @@ app.use(express.json());
 app.use(cors());
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173'); // Ustawia domenę frontendu, który ma dostęp
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // Ustawia dozwolone metody HTTP
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Ustawia dozwolone nagłówki
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173"); // Ustawia domenę frontendu, który ma dostęp
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE"); // Ustawia dozwolone metody HTTP
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Ustawia dozwolone nagłówki
   next();
 });
 
-
-
-app.get("/api/users/:login", async (req, res) => {
+app.get("/api/users/login", async (req, res) => {
+  const email = decodeURIComponent(req.query.email);
+  const password = decodeURIComponent(req.query.password);
+  console.log(password);
   try {
-    const { login } = req.params;
-    const user = await User.findOne({ login: login });
-    console.log(user);
+    const user = await User.findOne({ email: email, password: password });
+    console.log(5, user);
     if (user) {
-      res.send(user);
+      res.send({ isFound: true });
     } else {
       res.send({ isFound: false });
     }
@@ -30,10 +30,25 @@ app.get("/api/users/:login", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-app.post("/api/users/", async (req, res) => {
+
+app.get("/api/users/", async (req, res) => {
+  const email = decodeURIComponent(req.query.email);
+  console.log(email);
+  try {
+    const user = await User.findOne({ email: email });
+    console.log(user);
+    if (user) {
+      res.send({ isFound: true });
+    } else {
+      res.send({ isFound: false });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+app.post("/api/users/register", async (req, res) => {
   try {
     const user = await User.create(req.body);
-    console.log(user)
     res.status(200).json(user);
   } catch (error) {
     console.log(error);

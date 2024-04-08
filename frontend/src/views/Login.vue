@@ -1,43 +1,54 @@
 <script setup>
 import { defineModel } from "vue";
-const loginModel = defineModel('login')
+const emailModel = defineModel('email')
 const passwordModel = defineModel('password')
 
+async function register() {
+    const email = emailModel.value
+    const password = passwordModel.value
+    const res = await fetch(`http://localhost:5170/api/users/?email=${encodeURIComponent(email)}`, {
+        headers: {
+            "Content-type": "application/json"
+        },
+    })
+    const data = await res.json()
+    console.log(data)
 
-async function updateData() {
-    const login = loginModel.value
-    const password = loginModel.value
-    console.log(login, password)
+    if (data.isFound) {
+        console.log("found same login")
+    } else {
+        console.log("adding")
+        try {
+            await fetch('http://localhost:5170/api/users/register', {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: JSON.stringify({ email: email, password: password }),
+            })
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
+
+    resetModalValues
+}
+
+async function login() {
+    const email = emailModel.value
+    const password = passwordModel.value
     try {
-        const res = await fetch(`http://localhost:5170/api/users/${login}`);
+        const res = await fetch(`http://localhost:5170/api/users/login?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`)
         if (!res.ok) {
             throw new Error('Błąd pobierania danych');
         }
         const data = await res.json()
-        if (data.isFound === false) {
-            if (login !== null && login !== undefined && password !== null && password !== undefined) {
-                if (login.length >= 4 && password.length >= 4) {
-                    try {
-                        await fetch('http://localhost:5170/api/users/', {
-                            method: "POST",
-                            headers: {
-                                "Content-type": "application/json"
-                            },
-                            body: JSON.stringify({ login: login, password: password }),
-                        })
-                    } catch (error) {
-                        console.log(error.message)
-                    }
-
-                } else {
-                    console.log("za mało liter")
-                }
-            }
+        if (data.isFound === true) {
+            console.log('logged')
+            sessionStorage.setItem("logged", true);
+        } else {
+            console.log('inwalid data')
         }
-        if (data.login) {
-            console.log('użytkownik już jest')
-        }
-        console.log(await data)
     }
     catch (error) {
         console.log('error ', error.message)
@@ -45,19 +56,38 @@ async function updateData() {
     resetModalValues
 }
 
+
 function resetModalValues() {
-    login.value = null
+    email.value = null
     password.value = null
 }
 
 </script>
 <template>
-    <form>
-        <label for="login">Enter your login</label>
-        <input type="text" id="login" v-model="loginModel">
-        <label for="password">Enter your password</label>
-        <input type="password" id="password" v-model="passwordModel">
-        <input type="reset" value="reset" @click="resetModalValues">
-    </form>
-    <button @click="updateData()">send</button>
+    <v-form>
+        <v-container>
+            <v-row>
+                <v-col cols="12" md="4">
+                    <v-text-field v-model="emailModel" label="E-mail" hide-details required></v-text-field>
+                </v-col>
+                <v-col cols="12" md="4">
+                    <v-text-field type="password" v-model="passwordModel" :counter="10" label="Password" hide-details
+                        required></v-text-field>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col>
+                    <v-btn @click="resetModalValues()">
+                        clear
+                    </v-btn>
+                    <v-btn @click="register()">
+                        Register
+                    </v-btn>
+                    <v-btn @click="login()">
+                        log in
+                    </v-btn>
+                </v-col>
+            </v-row>
+        </v-container>
+    </v-form>
 </template>
