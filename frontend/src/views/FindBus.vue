@@ -18,7 +18,6 @@ async function fetching(link) {
     try {
         const res = await fetch(link)
         const data = await res.json()
-        console.log("find", data)
         scheduleToPass.value = data
         isDataDownloaded.value = true
     } catch (error) {
