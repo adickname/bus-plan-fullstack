@@ -38,7 +38,13 @@ async function login() {
     const email = emailModel.value
     const password = passwordModel.value
     try {
-        const res = await fetch(`http://localhost:5170/api/users/login?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`)
+        const res = await fetch(`http://localhost:5170/api/users/login`, {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({ email: email, password: password }),
+        })
         const data = await res.json()
         if (data.isFound === true) {
             console.log('logged')
@@ -52,7 +58,6 @@ async function login() {
     }
     resetModalValues
 }
-
 
 function resetModalValues() {
     email.value = null

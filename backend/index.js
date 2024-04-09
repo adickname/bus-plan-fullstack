@@ -17,13 +17,10 @@ app.use((req, res, next) => {
 
 //user
 
-app.get("/api/users/login", async (req, res) => {
-  const email = decodeURIComponent(req.query.email);
-  const password = decodeURIComponent(req.query.password);
-  console.log(password);
+app.post("/api/users/login", async (req, res) => {
   try {
+    const { email, password } = req.body;
     const user = await User.findOne({ email: email, password: password });
-    console.log(5, user);
     if (user) {
       res.send({ isFound: true });
     } else {
