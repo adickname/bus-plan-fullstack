@@ -1,8 +1,8 @@
 <script setup>
-import { defineModel } from "vue";
+import { defineModel, ref } from "vue";
 const emailModel = defineModel('email')
 const passwordModel = defineModel('password')
-
+const form = ref()
 async function register() {
     const email = emailModel.value
     const password = passwordModel.value
@@ -30,8 +30,7 @@ async function register() {
             console.log(error.message)
         }
     }
-
-    resetModalValues
+    form._value.reset()
 }
 
 async function login() {
@@ -56,7 +55,7 @@ async function login() {
     catch (error) {
         console.log('error ', error.message)
     }
-    resetModalValues
+    form._value.reset()
 }
 
 function resetModalValues() {
@@ -66,7 +65,7 @@ function resetModalValues() {
 
 </script>
 <template>
-    <v-form>
+    <v-form ref="form">
         <v-container>
             <v-row>
                 <v-col cols="12" md="4">
@@ -79,7 +78,7 @@ function resetModalValues() {
             </v-row>
             <v-row>
                 <v-col>
-                    <v-btn @click="resetModalValues()">
+                    <v-btn type="reset">
                         clear
                     </v-btn>
                     <v-btn @click="register()">
