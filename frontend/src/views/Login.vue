@@ -39,9 +39,6 @@ async function login() {
     const password = passwordModel.value
     try {
         const res = await fetch(`http://localhost:5170/api/users/login?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`)
-        if (!res.ok) {
-            throw new Error('Błąd pobierania danych');
-        }
         const data = await res.json()
         if (data.isFound === true) {
             console.log('logged')

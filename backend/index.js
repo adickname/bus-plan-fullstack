@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const app = express();
 const User = require("./models/user.model.js");
 const cors = require("cors");
+const Schedule = require("./models/schedule.model.js");
 
 app.use(express.json());
 app.use(cors());
@@ -13,6 +14,8 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Ustawia dozwolone nagłówki
   next();
 });
+
+//user
 
 app.get("/api/users/login", async (req, res) => {
   const email = decodeURIComponent(req.query.email);
@@ -54,6 +57,41 @@ app.post("/api/users/register", async (req, res) => {
     console.log(error);
   }
 });
+
+//schedule
+
+app.get("/api/schedules", async (req, res) => {
+  try {
+    if (req.query.end && req.query.start) {
+      const { end, start } = req.query;
+      const schedule = await Schedule.find({ end: end, start: start });
+      console.log(schedule);
+      if (schedule.length === 0) {
+        res.send({ message: "Cannot find. Check your data." });
+      }
+      res.status(200).json(schedule);
+    } else if (req.query.end) {
+      const { end } = req.query;
+      const schedule = await Schedule.find({ end: end });
+      if (schedule.length === 0) {
+        res.send({ message: "Cannot find. Check your data." });
+      }
+      res.status(200).json(schedule);
+    } else if (req.query.start) {
+      const { start } = req.query;
+      const schedule = await Schedule.find({ start: start });
+      if (schedule.length === 0) {
+        res.send({ message: "Cannot find. Check your data." });
+      }
+      res.status(200).json(schedule);
+    } else {
+      res.send({ message: "Cannot find. Check your data." });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+});
+
 mongoose
   .connect(
     "mongodb+srv://pasterkaadrian:uCgtPdtkelF8mz40@cluster-0.vsqoqx6.mongodb.net/Node-API?retryWrites=true&w=majority&appName=Cluster-0"

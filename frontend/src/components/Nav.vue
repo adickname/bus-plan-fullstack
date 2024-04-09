@@ -30,6 +30,7 @@ import { RouterLink, RouterView } from "vue-router"
         <v-tabs v-model="tab" bg-color="primary">
             <router-link :to="{ name: 'home' }"><v-tab value="home">Home</v-tab></router-link>
             <router-link :to="{ name: 'login' }"><v-tab value="login">Login/Register</v-tab></router-link>
+            <router-link :to="{ name: 'find' }"><v-tab value="find">Find the bus</v-tab></router-link>
         </v-tabs>
 
         <v-card-text>
@@ -39,6 +40,9 @@ import { RouterLink, RouterView } from "vue-router"
                 </v-window-item>
 
                 <v-window-item value="login">
+                    <router-view></router-view>
+                </v-window-item>
+                <v-window-item value="find">
                     <router-view></router-view>
                 </v-window-item>
             </v-window>

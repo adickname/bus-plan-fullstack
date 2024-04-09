@@ -1,16 +1,32 @@
 const mongoose = require("mongoose");
-const UserSchema = mongoose.Schema(
+
+const PlaceSchema = mongoose.Schema({
+  place: {
+    type: String,
+    required: [true, "required"],
+  },
+  hours: {
+    type: [String],
+  },
+});
+
+const ScheduleSchema = mongoose.Schema(
   {
+    comapny: {
+      type: String,
+      required: [true, "required"],
+    },
     start: {
-      type: Object,
+      type: String,
       required: [true, "required"],
     },
     end: {
-      type: Object,
+      type: String,
       required: [true, "required"],
     },
-    rest: {
-      type: Object,
+    places: {
+      type: [PlaceSchema],
+      required: [true, "required"],
     },
   },
   {
@@ -18,5 +34,5 @@ const UserSchema = mongoose.Schema(
   }
 );
 
-const User = mongoose.model("User", UserSchema);
-module.exports = User;
+const Schedule = mongoose.model("Schedule", ScheduleSchema);
+module.exports = Schedule;
