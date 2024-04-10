@@ -1,4 +1,6 @@
 import { createApp } from "vue";
+import PrimeVue from "primevue/config";
+import "primevue/resources/themes/lara-dark-indigo/theme.css";
 import App from "./App.vue";
 
 import "vuetify/styles";
@@ -13,4 +15,4 @@ const vuetify = createVuetify({
 import { router } from "./router.js";
 const app = createApp(App);
 
-app.use(router).use(vuetify).mount("#app");
+app.use(router).use(vuetify).use(PrimeVue).mount("#app");

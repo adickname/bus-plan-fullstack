@@ -1,10 +1,19 @@
 <script setup>
 import { defineModel, ref } from "vue";
 import Schedule from "../components/Schedule.vue"
+import Checkbox from 'primevue/checkbox';
 const endModel = defineModel('end')
 const startModel = defineModel('start')
 const isDataDownloaded = ref(false)
 const scheduleToPass = ref()
+const companies = ref()
+const companiesFilter = ref([])
+async function getCompanies() {
+    const res = await fetch("http://localhost:5170/api/schedules/company")
+    const company = res.json()
+    companies.value = await company
+}
+getCompanies()
 function validatingData(data) {
     if (data) {
         if (data.length >= 3) {
@@ -67,14 +76,19 @@ async function findBusLine() {
                     <v-text-field v-model="endModel" :counter="10" label="destination min 3 characters" hide-details
                         required></v-text-field>
                 </v-col>
+                <template v-for="company in companies">
+                    <Checkbox v-model="companiesFilter" :label="company" :value="company" :inputId="company"
+                        name="company" />
+                    <label :for="company">{{ company }}</label>
+                </template>
             </v-row>
             <v-row>
                 <v-col>
                     <v-btn @click="findScheduleAfterNameOfLine()">
-                        find bus line
+                        find with bus line
                     </v-btn>
                     <v-btn @click="findBusLine()">
-                        filter bus line with bus stops
+                        find with bus stops
                     </v-btn>
                 </v-col>
             </v-row>

@@ -99,7 +99,6 @@ app.get("/api/schedules/bus-stops", async (req, res) => {
         "places.place": { $regex: `${start}` },
         "places.place": { $regex: `${end}` },
       });
-      console.log(schedule);
       if (schedule.length === 0) {
         res.send({ message: "Cannot find. Check your data." });
       }
@@ -125,6 +124,15 @@ app.get("/api/schedules/bus-stops", async (req, res) => {
     } else {
       res.send({ message: "Cannot find. Check your data." });
     }
+  } catch (error) {
+    console.log(error.message);
+  }
+});
+
+app.get("/api/schedules/company", async (req, res) => {
+  try {
+    const company = await Schedule.distinct("company");
+    res.status(200).json(company);
   } catch (error) {
     console.log(error.message);
   }
