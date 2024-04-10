@@ -57,27 +57,35 @@ app.post("/api/users/register", async (req, res) => {
 
 //schedule
 
-app.get("/api/schedules/bus-line", async (req, res) => {
+app.post("/api/schedules/bus-line", async (req, res) => {
   try {
-    if (req.query.end && req.query.start) {
-      const { end, start } = req.query;
-      const schedule = await Schedule.find({ end: end, start: start });
+    if (req.body.end && req.body.start) {
+      const { end, start, companies } = req.body;
+      const schedule = await Schedule.find({
+        end: end,
+        start: start,
+        company: { $in: companies._value },
+      });
       console.log(schedule);
       if (schedule.length === 0) {
         res.send({ message: "Cannot find. Check your data." });
       }
       res.status(200).json(schedule);
-    } else if (req.query.end) {
-      const { end } = req.query;
-      const schedule = await Schedule.find({ end: end });
+    } else if (req.body.end) {
+      const { end, companies } = req.body;
+      const schedule = await Schedule.find({
+        end: end,
+        company: { $in: companies._value },
+      });
       if (schedule.length === 0) {
         res.send({ message: "Cannot find. Check your data." });
       }
       res.status(200).json(schedule);
-    } else if (req.query.start) {
-      const { start } = req.query;
+    } else if (req.body.start) {
+      const { start } = req.body;
       const schedule = await Schedule.find({
         start: start,
+        company: { $in: companies._value },
       });
       if (schedule.length === 0) {
         res.send({ message: "Cannot find. Check your data." });
@@ -91,31 +99,34 @@ app.get("/api/schedules/bus-line", async (req, res) => {
   }
 });
 
-app.get("/api/schedules/bus-stops", async (req, res) => {
+app.post("/api/schedules/bus-stops", async (req, res) => {
   try {
-    if (req.query.end && req.query.start) {
-      const { end, start } = req.query;
+    if (req.body.end && req.body.start) {
+      const { end, start, companies } = req.body;
       const schedule = await Schedule.find({
         "places.place": { $regex: `${start}` },
         "places.place": { $regex: `${end}` },
+        company: { $in: companies._value },
       });
       if (schedule.length === 0) {
         res.send({ message: "Cannot find. Check your data." });
       }
       res.status(200).json(schedule);
-    } else if (req.query.end) {
-      const { end } = req.query;
+    } else if (req.body.end) {
+      const { end, companies } = req.body;
       const schedule = await Schedule.find({
         "places.place": { $regex: `${end}` },
+        company: { $in: companies._value },
       });
       if (schedule.length === 0) {
         res.send({ message: "Cannot find. Check your data." });
       }
       res.status(200).json(schedule);
-    } else if (req.query.start) {
-      const { start } = req.query;
+    } else if (req.body.start) {
+      const { start } = req.body;
       const schedule = await Schedule.find({
         "places.place": { $regex: `${start}` },
+        company: { $in: companies._value },
       });
       if (schedule.length === 0) {
         res.send({ message: "Cannot find. Check your data." });
