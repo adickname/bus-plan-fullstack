@@ -8,8 +8,6 @@ const isDataDownloaded = ref(false)
 const scheduleToPass = ref()
 const companies = ref()
 const companiesFilter = ref([])
-const checkedAll = ref(false)
-const uncheckedAll = ref(false)
 async function getCompanies() {
     const res = await fetch("http://localhost:5170/api/schedules/company")
     const company = res.json()
@@ -17,7 +15,13 @@ async function getCompanies() {
 }
 getCompanies()
 
+function checkAll() {
+    companiesFilter.value = [...companies.value]
+}
 
+function uncheckAll() {
+    companiesFilter.value = 0
+}
 
 function validatingData(data) {
     if (data) {
@@ -29,6 +33,7 @@ function validatingData(data) {
     }
 }
 async function fetching(link, end, start) {
+    console.log(companiesFilter.value)
     if (companiesFilter.value.length > 0) {
         try {
             const res = await fetch(link, {
@@ -94,9 +99,13 @@ async function findBusLine() {
                 </v-col>
                 <template v-for="company in companies">
                     <input v-model="companiesFilter" type="checkbox" name="company" :value="company" :id="company"
-                        class="checkbox-company" checked>
+                        class="checkbox-company">
                     <label :for="company">{{ company }}</label>
                 </template>
+                <v-col>
+                    <v-btn @click="checkAll()">Check all</v-btn>
+                    <v-btn @click="uncheckAll()">Uncheck all</v-btn>
+                </v-col>
 
             </v-row>
             <v-row>
