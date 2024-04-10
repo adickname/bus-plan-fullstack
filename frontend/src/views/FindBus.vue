@@ -27,14 +27,29 @@ async function fetching(link) {
 async function findScheduleAfterNameOfLine() {
     const end = endModel.value
     const start = startModel.value
-    if (validatingData(end) && validatingData(start)) {
-        fetching(`http://localhost:5170/api/schedules?end=${end}&start=${start}`)
+    if (validatingData(endModel.value) && validatingData(startModel.value)) {
+        fetching(`http://localhost:5170/api/schedules/bus-line?end=${end}&start=${start}`)
     }
     else if (validatingData(end)) {
-        fetching(`http://localhost:5170/api/schedules?end=${end}`)
+        fetching(`http://localhost:5170/api/schedules/bus-line?end=${end}`)
     }
     else if (validatingData(start)) {
-        fetching(`http://localhost:5170/api/schedules?start=${start}`)
+        fetching(`http://localhost:5170/api/schedules/bus-line?start=${start}`)
+
+    }
+}
+
+async function findBusLine() {
+    const end = endModel.value
+    const start = startModel.value
+    if (validatingData(endModel.value) && validatingData(startModel.value)) {
+        fetching(`http://localhost:5170/api/schedules/bus-stops?end=${end}&start=${start}`)
+    }
+    else if (validatingData(end)) {
+        fetching(`http://localhost:5170/api/schedules/bus-stops?end=${end}`)
+    }
+    else if (validatingData(start)) {
+        fetching(`http://localhost:5170/api/schedules/bus-stops?start=${start}`)
 
     }
 }
@@ -56,7 +71,10 @@ async function findScheduleAfterNameOfLine() {
             <v-row>
                 <v-col>
                     <v-btn @click="findScheduleAfterNameOfLine()">
-                        find
+                        find bus line
+                    </v-btn>
+                    <v-btn @click="findBusLine()">
+                        filter bus line with bus stops
                     </v-btn>
                 </v-col>
             </v-row>

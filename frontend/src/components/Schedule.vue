@@ -5,7 +5,7 @@ const props = defineProps(['schedule'])
 
 <template>
     <template v-for="row in props.schedule" v-if="!props.schedule.message">
-        <v-card :title="`${row.start}-${row.end}`" :subtitle="`${row.company}`" variant="outlined" margin="5px">
+        <v-card :title="`${row.start}---${row.end}`" :subtitle="`${row.company}`" variant="outlined" margin="5px">
             <p v-for="place in row.places">
                 {{ place.place }} |<template v-for="hour in place.hours">{{ hour }}|</template>
             </p>
