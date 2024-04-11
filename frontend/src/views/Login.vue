@@ -58,6 +58,7 @@ async function login() {
             if (data.isFound === true) {
                 console.log("logged");
                 sessionStorage.setItem("logged", true);
+                isLogged.value = true
             } else {
                 console.log("inwalid data");
             }
@@ -65,7 +66,6 @@ async function login() {
             console.log("error ", error.message);
         }
         form._value.reset();
-        isLogged.value = true
     } else {
         console.log("you are already logged");
     }
