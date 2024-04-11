@@ -1,9 +1,12 @@
 <script setup>
-import { defineModel, ref } from "vue";
+import { defineModel, defineProps, defineEmits, ref } from "vue";
+const emit = defineEmits(['setIsLoggedInParent'])
+const props = defineProps(['onSubPage'])
 const emailModel = defineModel("email");
 const passwordModel = defineModel("password");
 const form = ref();
 const isLogged = ref()
+
 async function register() {
     const email = emailModel.value;
     const password = passwordModel.value;
@@ -37,8 +40,19 @@ async function register() {
     form._value.reset();
 }
 
+function initIsLogged() {
+    if (sessionStorage.getItem("logged")) {
+        isLogged.value = true
+    } else {
+        isLogged.value = false
+    }
+}
+
+initIsLogged()
+
 function logout() {
     sessionStorage.removeItem("logged")
+    sessionStorage.removeItem("email")
     isLogged.value = false
 }
 
@@ -59,6 +73,10 @@ async function login() {
                 console.log("logged");
                 sessionStorage.setItem("logged", true);
                 isLogged.value = true
+                sessionStorage.setItem("email", emailModel.value)
+                if (props.onSubPage) {
+                    emit('setIsLoggedInParent')
+                }
             } else {
                 console.log("inwalid data");
             }
@@ -80,7 +98,7 @@ async function login() {
                     <v-text-field v-model="emailModel" label="E-mail" hide-details required></v-text-field>
                 </v-col>
                 <v-col cols="12" md="4">
-                    <v-text-field type="password" v-model="passwordModel" :counter="10" label="Password" hide-details
+                    <v-text-field type="password" v-model="passwordModel" label="Password" hide-details
                         required></v-text-field>
                 </v-col>
             </v-row>

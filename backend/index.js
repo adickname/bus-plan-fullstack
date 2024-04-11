@@ -1,10 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
-const User = require("./models/user.model.js");
 const cors = require("cors");
+const User = require("./models/user.model.js");
 const Schedule = require("./models/schedule.model.js");
-
+const Order = require("./models/order.model.js");
+const Price = require("./models/price.model.js");
 app.use(express.json());
 app.use(cors());
 
@@ -49,7 +50,7 @@ app.get("/api/users/", async (req, res) => {
 app.post("/api/users/register", async (req, res) => {
   try {
     const user = await User.create(req.body);
-    res.status(200).json(user);
+    res.status(200).send({ message: "added succesfully" });
   } catch (error) {
     console.log(error);
   }
@@ -99,7 +100,7 @@ app.post("/api/schedules/bus-line", async (req, res) => {
   }
 });
 
-app.post("/api/schedules/bus-stops", async (req, res) => {
+app.post("/api/schedules/bus-stops/filter-companies", async (req, res) => {
   try {
     if (req.body.end && req.body.start) {
       const { end, start, companies } = req.body;
@@ -140,12 +141,55 @@ app.post("/api/schedules/bus-stops", async (req, res) => {
   }
 });
 
+app.post("/api/schedules/bus-stops", async (req, res) => {
+  try {
+    if (req.body.end && req.body.start) {
+      const { end, start } = req.body;
+      const schedule = await Schedule.find({
+        $and: [
+          { "places.place": { $in: start } },
+          { "places.place": { $in: end } },
+        ],
+      });
+      if (schedule.length === 0) {
+        res.send({ message: "Cannot find. Check your data." });
+      } else {
+        res.status(200).json(schedule);
+      }
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+});
+
+//companies
+
 app.get("/api/schedules/company", async (req, res) => {
   try {
     const company = await Schedule.distinct("company");
     res.status(200).json(company);
   } catch (error) {
     console.log(error.message);
+  }
+});
+
+//orders
+
+app.post("/api/orders/new", async (req, res) => {
+  try {
+    const user = await Order.create(req.body);
+    res.status(200).send({ message: "added succesfully" });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.get("/api/orders/prices", async (req, res) => {
+  try {
+    const price = await Price.findOne({ company: req.query.company });
+    res.status(200).json(price);
+  } catch (error) {
+    res.send({ message: message });
   }
 });
 

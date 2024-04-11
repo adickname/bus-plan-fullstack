@@ -73,13 +73,13 @@ async function findBusLine() {
     const end = endModel.value
     const start = startModel.value
     if (validatingData(endModel.value) && validatingData(startModel.value)) {
-        fetching(`http://localhost:5170/api/schedules/bus-stops`, end, start)
+        fetching(`http://localhost:5170/api/schedules/bus-stops/filter-companies`, end, start)
     }
     else if (validatingData(end)) {
-        fetching(`http://localhost:5170/api/schedules/bus-stops`, end)
+        fetching(`http://localhost:5170/api/schedules/bus-stops/filter-companies`, end)
     }
     else if (validatingData(start)) {
-        fetching(`http://localhost:5170/api/schedules/bus-stops`, start)
+        fetching(`http://localhost:5170/api/schedules/bus-stops/filter-companies`, start)
 
     }
 }

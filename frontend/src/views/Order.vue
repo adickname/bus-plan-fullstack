@@ -1,34 +1,235 @@
 <script setup>
 import { ref, defineModel } from "vue";
-const name = defineModel('name')
-const surname = defineModel('surname')
-const email = defineModel('email')
-const end = defineModel('end ')
-const id = defineModel('id')
-const start = defineModel('start')
+import RadioButton from 'primevue/radiobutton';
+import Login from "./Login.vue"
+const nameModel = defineModel('name')
+const surnameModel = defineModel('surname')
+const endModel = defineModel('end')
+const startModel = defineModel('start')
+const ageModel = defineModel('age')
+const companies = ref([])
+const companyRef = ref()
+const isLogged = ref(false)
+const oneWayRef = ref()
+const typeTicketRef = ref()
+const form = ref();
+async function order() {
+    let minDistance = null
+    let distance
+    let dataPrice
+    try {
+        const res = await fetch(`http://localhost:5170/api/orders/prices?company=${companyRef.value}`)
+        dataPrice = await res.json()
+        console.log(await dataPrice)
+        let multiplierTypeTicket
+        let multiplierOneWay
+        if (oneWayRef.value) {
+            if (oneWayRef.value === true) {
+                multiplierOneWay = 1
+            } else {
+                multiplierOneWay = 2
+            }
+        }
+        if (typeTicketRef.value) {
+            switch (typeTicketRef.value) {
+                case 'day':
+                    multiplierTypeTicket = await dataPrice.price
+                    break
+                case 'week':
+                    multiplierTypeTicket = await dataPrice.priceWeek
+                    break
+                case 'month':
+                    multiplierTypeTicket = await dataPrice.priceMonth
+                    break
+            }
+        }
+        if (ageModel.value < 18) {
+            multiplierTypeTicket /= 100
+            multiplierTypeTicket *= 51
+        }
+        /* console.log(sessionStorage.getItem("ticket-data")) */
+        const ticketData = JSON.parse(sessionStorage.getItem("ticket-data"))
+        const dataWithCompanyFilter = []
+        ticketData.forEach(element => {
+            if (element.company === companyRef.value) {
+                dataWithCompanyFilter.push(element)
+            }
+        })
+        dataWithCompanyFilter.forEach(element => {
+            element.places.slice().reverse().forEach(elementOfLine => {
+                if (elementOfLine.place === endModel.value) {
+                    distance = elementOfLine.distance
+                    console.log(elementOfLine.place, elementOfLine.distance)
+                }
+                if (elementOfLine.place === startModel.value) {
+                    console.log(elementOfLine.place, elementOfLine.distance)
+                    distance -= elementOfLine.distance
+                }
+            })
+            if (minDistance) {
+                if (minDistance >= distance) {
+                    minDistance = distance
+                }
+            } else {
+                minDistance = distance
+            }
+        })
+        try {
+            try {
+                const res = await fetch("http://localhost:5170/api/orders/new", {
+                    method: "POST", headers: {
+                        "Content-type": "application/json",
+                    },
+                    body: JSON.stringify({ owner: sessionStorage.getItem("email"), name: nameModel.value, age: ageModel.value, company: companyRef.value, distance: minDistance, end: endModel.value, start: startModel.value, fakePrice: minDistance * multiplierTypeTicket * multiplierOneWay, reducedPrice: (minDistance * multiplierTypeTicket / 100) * 49 * multiplierOneWay, company: companyRef.value })
+                })
+                const dataRes = await res.json()
+                console.log(await dataRes.message)
+            }
+            catch (error) {
+                console.log(error.message)
+            }
+        } catch (error) {
+            console.log(error.message)
+        }
+
+    }
+    catch (error) {
+        console.log(error.message)
+    }
+
+}
+
+function setIsLogged() {
+    if (sessionStorage.getItem("logged")) {
+        isLogged.value = true
+    }
+}
+setIsLogged()
+
+async function findCompanies() {
+    companies.value = []
+    try {
+        const res = await fetch("http://localhost:5170/api/schedules/bus-stops", {
+            method: "POST", headers: {
+                "Content-type": "application/json",
+            },
+            body: JSON.stringify({ end: endModel.value, start: startModel.value })
+        })
+        const data = await res.json()
+        data.forEach(element => {
+            let isFree = true
+            companies.value.forEach(elementCompanies => {
+                if (elementCompanies === element.company) {
+                    isFree = false
+                }
+            })
+            if (isFree) {
+                companies.value.push(element.company)
+            }
+        });
+        sessionStorage.setItem("ticket-data", JSON.stringify(data))
+    } catch (error) {
+        console.log(error.message)
+    }
+
+
+
+}
+
 </script>
 <template>
-    <form>
-        <input type="text" v-model="name">
-        <input type="text" v-model="surname">
-        <input type="email" v-model="email">
-        <select v-model="start">
-            <option value="Kraków">Kraków</option>
-            <option value="Warszawa">Warszawa</option>
-            <option value="Wrocław">Wrocław</option>
-        </select>
-        <select v-model="end">
-            <option value="Kraków">Kraków</option>
-            <option value="Wrocław">Wrocław</option>
-            <option value="Warszawa">Warszawa</option>
-        </select>
-        <input type="number" v-model="id">
-        <input type="submit">
-    </form>
-    <p>{{ name }}</p>
-    <p>{{ surname }}</p>
-    <p>{{ email }}</p>
-    <p>{{ start }}</p>
-    <p>{{ end }}</p>
-    <p>{{ id }}</p>
+    <v-form ref="form">
+        <v-container v-if="!isLogged">
+            <p>You must be logged to use this subpage</p>
+            <Login onSubPage="true" @set-is-logged-in-parent="setIsLogged"></Login>
+        </v-container>
+        <v-container v-else>
+            <v-row>
+                <v-col cols="12" md="4">
+                    <v-text-field v-model="nameModel" label="Imie" hide-details required></v-text-field>
+                </v-col>
+                <v-col cols="12" md="4">
+                    <v-text-field v-model="surnameModel" label="Nazwisko" hide-details required></v-text-field>
+                </v-col>
+                <v-col cols="12" md="4">
+                    <v-text-field v-model="ageModel" label="Wiek" hide-details required></v-text-field>
+                </v-col>
+                <v-col cols="12" md="4">
+                    <v-text-field v-model="startModel" label="Początek trasy" hide-details required></v-text-field>
+                </v-col>
+                <v-col cols="12" md="4">
+                    <v-text-field v-model="endModel" label="koniec trasy" hide-details required></v-text-field>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" md="4">
+                    <template v-for="company in companies">
+                        <div class="flex flex-wrap gap-3">
+                            <div class="flex align-items-center">
+                                <RadioButton v-model="companyRef" :inputId="company" name="company" :value="company" />
+                                <label :for="company" class="ml-2">{{ company }}</label>
+                            </div>
+                        </div>
+                    </template>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" md="4">
+                    <div class="flex flex-wrap gap-3">
+                        <div class="flex align-items-center">
+                            <RadioButton v-model="typeTicketRef" inputId="day" name="typeTicket" value="day" />
+                            <label for="day" class="ml-2">Jednodniowy</label>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-3">
+                        <div class="flex align-items-center">
+                            <RadioButton v-model="typeTicketRef" inputId="week" name="typeTicket" value="week" />
+                            <label for="week" class="ml-2">Tygoniowy</label>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-3">
+                        <div class="flex align-items-center">
+                            <RadioButton v-model="typeTicketRef" inputId="month" name="typeTicket" value="month" />
+                            <label for="month" class="ml-2">Miesięczny</label>
+                        </div>
+                    </div>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" md="4">
+                    <div class="flex flex-wrap gap-3">
+                        <div class="flex align-items-center">
+                            <RadioButton v-model="oneWayRef" inputId="day" name="oneWay" value="true" />
+                            <label for="oneWay" class="ml-2">W jedną stronę</label>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-3">
+                        <div class="flex align-items-center">
+                            <RadioButton v-model="oneWayRef" inputId="round-trip" name="oneWay" value="false" />
+                            <label for="round-trip" class="ml-2">W obie strony</label>
+                        </div>
+                    </div>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col>
+                    <v-btn type="reset">
+                        clear
+                    </v-btn>
+                    <v-btn @click="findCompanies()" v-if="companies.length === 0">
+                        Find companies
+                    </v-btn>
+                    <v-btn @click="order()" v-else-if="companies.length > 0">
+                        order
+                    </v-btn>
+                </v-col>
+            </v-row>
+        </v-container>
+
+    </v-form>
+    <p>{{ nameModel }}</p>
+    <p>{{ surnameModel }}</p>
+    <p>{{ startModel }}</p>
+    <p>{{ endModel }}</p>
+    <p>{{ ageModel }}</p>
 </template>
