@@ -1,10 +1,9 @@
 <script setup>
 import { defineModel, ref } from "vue";
-import Button from 'primevue/button';
-import InputText from "primevue/inputtext";
 const emailModel = defineModel("email");
 const passwordModel = defineModel("password");
 const form = ref();
+const isLogged = ref()
 async function register() {
     const email = emailModel.value;
     const password = passwordModel.value;
@@ -38,6 +37,11 @@ async function register() {
     form._value.reset();
 }
 
+function logout() {
+    sessionStorage.removeItem("logged")
+    isLogged.value = false
+}
+
 async function login() {
     if (!sessionStorage.getItem("logged")) {
         const email = emailModel.value;
@@ -61,6 +65,7 @@ async function login() {
             console.log("error ", error.message);
         }
         form._value.reset();
+        isLogged.value = true
     } else {
         console.log("you are already logged");
     }
@@ -87,8 +92,11 @@ async function login() {
                     <v-btn @click="register()">
                         Register
                     </v-btn>
-                    <v-btn @click="login()">
+                    <v-btn @click="login()" v-if="!isLogged">
                         log in
+                    </v-btn>
+                    <v-btn @click=" logout()" v-else>
+                        log out
                     </v-btn>
                 </v-col>
             </v-row>
