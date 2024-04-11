@@ -20,7 +20,7 @@ function checkAll() {
 }
 
 function uncheckAll() {
-    companiesFilter.value = 0
+    companiesFilter.value = []
 }
 
 function validatingData(data) {
