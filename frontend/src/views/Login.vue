@@ -1,5 +1,7 @@
 <script setup>
 import { defineModel, defineProps, defineEmits, ref } from "vue";
+import { useAuth0 } from '@auth0/auth0-vue';
+const { loginWithRedirect, loginWithPopup } = useAuth0();
 const emit = defineEmits(['setIsLoggedInParent'])
 const props = defineProps(['onSubPage'])
 const emailModel = defineModel("email");
@@ -56,7 +58,7 @@ function logout() {
     isLogged.value = false
 }
 
-async function login() {
+/* async function login() {
     if (!sessionStorage.getItem("logged")) {
         const email = emailModel.value;
         const password = passwordModel.value;
@@ -88,6 +90,10 @@ async function login() {
         console.log("you are already logged");
     }
     form._value.reset();
+} */
+
+const login = () => {
+    loginWithRedirect()
 }
 </script>
 <template>
