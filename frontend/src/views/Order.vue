@@ -36,6 +36,7 @@ async function findCompanies() {
             body: JSON.stringify({ end: endModel.value, start: startModel.value }),
         });
         const data = await res.json();
+        console.log(data)
         data.forEach((element) => {
             let isFree = true;
             companies.value.forEach((elementCompanies) => {
@@ -87,12 +88,12 @@ async function findCompanies() {
                             <label for="day" class="ml-2">Jednodniowy</label>
                         </div>
                     </div>
-                    <div class="flex flex-wrap gap-3">
+                    <!--     <div class="flex flex-wrap gap-3">
                         <div class="flex align-items-center">
                             <RadioButton v-model="typeTicketRef" inputId="week" name="typeTicket" value="week" />
                             <label for="week" class="ml-2">Tygoniowy</label>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="flex flex-wrap gap-3">
                         <div class="flex align-items-center">
                             <RadioButton v-model="typeTicketRef" inputId="month" name="typeTicket" value="month" />
@@ -105,7 +106,7 @@ async function findCompanies() {
                 <v-col cols="12" md="4">
                     <div class="flex flex-wrap gap-3">
                         <div class="flex align-items-center">
-                            <RadioButton v-model="oneWayRef" inputId="day" name="oneWay" value="true" />
+                            <RadioButton v-model="oneWayRef" inputId="oneWay" name="oneWay" value="true" />
                             <label for="oneWay" class="ml-2">W jedną stronę</label>
                         </div>
                     </div>
@@ -155,7 +156,7 @@ async function findCompanies() {
                         Find companies
                     </v-btn>
                     <v-btn
-                        @click="order(companyRef, oneWayRef, typeTicketRef, ageModel.value, nameModel.value, endModel.value, startModel.value, surnameModel.value, dateIssueModel)"
+                        @click="order(companyRef, oneWayRef, typeTicketRef, ageModel, nameModel, endModel, startModel, surnameModel, dateIssueModel)"
                         v-else-if="companies.length > 0">
                         order
                     </v-btn>

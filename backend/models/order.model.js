@@ -6,15 +6,19 @@ const OrderSchema = mongoose.Schema(
       type: String,
       required: [true, "required"],
     },
+    name: {
+      type: String,
+      required: [true, "required"],
+    },
+    surname: {
+      type: String,
+      required: [true, "required"],
+    },
+    age: {
+      type: String || Number,
+      required: [true, "required"],
+    },
     company: {
-      type: String,
-      required: [true, "required"],
-    },
-    start: {
-      type: String,
-      required: [true, "required"],
-    },
-    end: {
       type: String,
       required: [true, "required"],
     },
@@ -22,11 +26,33 @@ const OrderSchema = mongoose.Schema(
       type: String,
       required: [true, "required"],
     },
-    fakePrice: {
+    end: {
       type: String,
       required: [true, "required"],
     },
+    start: {
+      type: String,
+      required: [true, "required"],
+    },
+
+    fakePrice: {
+      type: String || Number,
+      required: [true, "required"],
+    },
     reducedPrice: {
+      type: String || Number,
+      required: [true, "required"],
+    },
+    dateOfIssue: {
+      type: Date,
+      required: [true, "required"],
+    },
+
+    dateOfExpiry: {
+      type: Date,
+      required: [true, "required"],
+    },
+    typeTicket: {
       type: String,
       required: [true, "required"],
     },

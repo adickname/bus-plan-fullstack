@@ -23,7 +23,7 @@ app.post("/api/users/login", async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email: email, password: password });
     if (user) {
-      res.send({ isFound: true });
+      res.json({ isFound: true, userId: user.id });
     } else {
       res.send({ isFound: false });
     }
@@ -145,12 +145,14 @@ app.post("/api/schedules/bus-stops", async (req, res) => {
   try {
     if (req.body.end && req.body.start) {
       const { end, start } = req.body;
+      console.log(end, start);
       const schedule = await Schedule.find({
         $and: [
           { "places.place": { $in: start } },
           { "places.place": { $in: end } },
         ],
       });
+      console.log(schedule);
       if (schedule.length === 0) {
         res.send({ message: "Cannot find. Check your data." });
       } else {

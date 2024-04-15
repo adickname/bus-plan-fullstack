@@ -9,19 +9,33 @@ export async function order(
   surname,
   dateOfIssue
 ) {
-  let minDistance = null;
+  let minDistance = 0;
   let distance;
   let dataPrice;
   let dateOfExpiry;
+  let reducedPrice;
 
   if (typeTicket === "day") {
+    dateOfIssue = `${dateOfIssue.getFullYear()}-${(dateOfIssue.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${dateOfIssue.getDate()}`;
     dateOfExpiry = dateOfIssue;
   }
   if (typeTicket === "month") {
     const data = new Date(dateOfIssue);
     console.log(data);
-    dateOfExpiry = new Date(dateOfIssue);
+    dateOfIssue = `${data.getFullYear()}-${(data.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${data.getDate().toString().padStart(2, "0")}`;
+    dateOfExpiry = new Date(data.getFullYear(), data.getMonth() + 1, 0);
+    dateOfExpiry = `${dateOfExpiry.getFullYear()}-${(
+      dateOfExpiry.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}-${dateOfExpiry.getDate().toString().padStart(2, "0")}`;
   }
+  console.log(dateOfIssue, dateOfExpiry);
+
   try {
     const res = await fetch(
       `http://localhost:5170/api/orders/prices?company=${company}`
@@ -84,6 +98,13 @@ export async function order(
       }
     });
     try {
+      if (age < 18) {
+        reducedPrice =
+          ((minDistance * multiplierTypeTicket) / 100) * 49 * multiplierOneWay;
+      } else {
+        reducedPrice = 0;
+      }
+
       try {
         const res = await fetch("http://localhost:5170/api/orders/new", {
           method: "POST",
@@ -91,7 +112,7 @@ export async function order(
             "Content-type": "application/json",
           },
           body: JSON.stringify({
-            owner: sessionStorage.getItem("email"),
+            owner: sessionStorage.getItem("id"),
             name: name,
             surname: surname,
             age: age,
@@ -99,14 +120,15 @@ export async function order(
             distance: minDistance,
             end: end,
             start: start,
-            fakePrice:
-              minDistance * multiplierTypeTicket * multiplierOneWay.toFixed(),
-            reducedPrice: (
-              ((minDistance * multiplierTypeTicket) / 100) *
-              49 *
+            fakePrice: (
+              minDistance *
+              multiplierTypeTicket *
               multiplierOneWay
             ).toFixed(),
-            company: company,
+            reducedPrice: reducedPrice.toFixed(),
+            dateOfIssue: dateOfIssue,
+            dateOfExpiry: `${dateOfExpiry}T23:59:59.999`,
+            typeTicket: typeTicket,
           }),
         });
         const dataRes = await res.json();

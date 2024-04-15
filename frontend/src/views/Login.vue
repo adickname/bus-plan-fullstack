@@ -1,6 +1,7 @@
 <script setup>
 import { defineModel, defineProps, defineEmits, ref } from "vue";
 import { useAuth0 } from '@auth0/auth0-vue';
+import { login as loginAuth } from "@/functions/auth0/login";
 const { loginWithRedirect, loginWithPopup } = useAuth0();
 const emit = defineEmits(['setIsLoggedInParent'])
 const props = defineProps(['onSubPage'])
@@ -54,11 +55,11 @@ initIsLogged()
 
 function logout() {
     sessionStorage.removeItem("logged")
-    sessionStorage.removeItem("email")
+    sessionStorage.removeItem("id")
     isLogged.value = false
 }
 
-/* async function login() {
+async function login() {
     if (!sessionStorage.getItem("logged")) {
         const email = emailModel.value;
         const password = passwordModel.value;
@@ -71,11 +72,12 @@ function logout() {
                 body: JSON.stringify({ email: email, password: password }),
             });
             const data = await res.json();
+            console.log(data)
             if (data.isFound === true) {
                 console.log("logged");
                 sessionStorage.setItem("logged", true);
                 isLogged.value = true
-                sessionStorage.setItem("email", emailModel.value)
+                sessionStorage.setItem("id", data.userId)
                 if (props.onSubPage) {
                     emit('setIsLoggedInParent')
                 }
@@ -90,11 +92,11 @@ function logout() {
         console.log("you are already logged");
     }
     form._value.reset();
-} */
-
-const login = () => {
-    loginWithRedirect()
 }
+
+/* const login = () => {
+    loginWithRedirect()
+} */
 </script>
 <template>
     <v-form ref="form">
