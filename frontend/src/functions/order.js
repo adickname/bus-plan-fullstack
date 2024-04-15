@@ -127,7 +127,7 @@ export async function order(
             ).toFixed(),
             reducedPrice: reducedPrice.toFixed(),
             dateOfIssue: dateOfIssue,
-            dateOfExpiry: `${dateOfExpiry}T23:59:59.999`,
+            dateOfExpiry: `${dateOfExpiry}`,
             typeTicket: typeTicket,
           }),
         });

@@ -186,12 +186,21 @@ app.post("/api/orders/new", async (req, res) => {
   }
 });
 
+app.post("/api/orders/find", async (req, res) => {
+  try {
+    const tickets = await Order.find({ owner: req.body.owner });
+    res.status(200).json(tickets);
+  } catch (error) {
+    res.send({ message: error.message });
+  }
+});
+
 app.get("/api/orders/prices", async (req, res) => {
   try {
     const price = await Price.findOne({ company: req.query.company });
     res.status(200).json(price);
   } catch (error) {
-    res.send({ message: message });
+    res.send({ message: error.message });
   }
 });
 

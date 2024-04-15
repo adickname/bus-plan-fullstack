@@ -44,12 +44,12 @@ const OrderSchema = mongoose.Schema(
       required: [true, "required"],
     },
     dateOfIssue: {
-      type: Date,
+      type: String,
       required: [true, "required"],
     },
 
     dateOfExpiry: {
-      type: Date,
+      type: String,
       required: [true, "required"],
     },
     typeTicket: {
