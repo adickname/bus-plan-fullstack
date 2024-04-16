@@ -1,65 +1,66 @@
 <script setup>
 import { defineModel, defineProps, defineEmits, ref } from "vue";
-import { useAuth0 } from '@auth0/auth0-vue';
-const { loginWithRedirect, loginWithPopup } = useAuth0();
-const emit = defineEmits(['setIsLoggedInParent'])
-const props = defineProps(['onSubPage'])
+const emit = defineEmits(["setIsLoggedInParent", "setDisplayMessage", "setMessageRef", "setSeverityRef"]);
+const props = defineProps(["onSubPage"]);
 const emailModel = defineModel("email");
 const passwordModel = defineModel("password");
 const form = ref();
-const isLogged = ref()
-
-async function register() {
+const isLogged = ref();
+const setPropertiesOfMessage = (message, severity) => {
+    emit("setDisplayMessage", true)
+    emit("setMessageRef", message)
+    emit("setSeverityRef", severity)
+};
+const register = async () => {
     const email = emailModel.value;
     const password = passwordModel.value;
-    const res = await fetch(
-        `http://localhost:5170/api/users`, {
+    const res = await fetch(`http://localhost:5170/api/users`, {
         method: "POST",
         headers: {
             "Content-type": "application/json",
         },
-        body: JSON.stringify({ email: email })
-    }
-    );
+        body: JSON.stringify({ email: email }),
+    });
     const data = await res.json();
-    console.log(data);
-
     if (data.isFound) {
-        console.log("found same login");
+        setPropertiesOfMessage("found same login", "info");
     } else {
-        console.log("adding");
+        setPropertiesOfMessage("adding", "info");
         try {
-            await fetch("http://localhost:5170/api/users/register", {
+            const res = await fetch("http://localhost:5170/api/users/register", {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
                 },
                 body: JSON.stringify({ email: email, password: password }),
             });
+            const data = await res.json();
+            setPropertiesOfMessage(data.message, "info");
         } catch (error) {
-            console.log(error.message);
+            setPropertiesOfMessage(data.message, "error");
         }
     }
     form._value.reset();
-}
+};
 
-function initIsLogged() {
+const initIsLogged = () => {
     if (sessionStorage.getItem("logged")) {
-        isLogged.value = true
+        isLogged.value = true;
     } else {
-        isLogged.value = false
+        isLogged.value = false;
     }
-}
+};
 
-initIsLogged()
+initIsLogged();
 
-function logout() {
-    sessionStorage.removeItem("logged")
-    sessionStorage.removeItem("id")
-    isLogged.value = false
-}
+const logout = () => {
+    sessionStorage.removeItem("logged");
+    sessionStorage.removeItem("id");
+    isLogged.value = false;
+    setPropertiesOfMessage("you are logged out", "info");
+};
 
-async function login() {
+const login = async () => {
     if (!sessionStorage.getItem("logged")) {
         const email = emailModel.value;
         const password = passwordModel.value;
@@ -72,31 +73,25 @@ async function login() {
                 body: JSON.stringify({ email: email, password: password }),
             });
             const data = await res.json();
-            console.log(data)
             if (data.isFound === true) {
-                console.log("logged");
+                setPropertiesOfMessage("you are logged in", "info");
                 sessionStorage.setItem("logged", true);
-                isLogged.value = true
-                sessionStorage.setItem("id", data.userId)
+                isLogged.value = true;
+                sessionStorage.setItem("id", data.userId);
                 if (props.onSubPage) {
-                    emit('setIsLoggedInParent')
+                    emit("setIsLoggedInParent");
                 }
             } else {
-                console.log("inwalid data");
+                setPropertiesOfMessage("inwalid data", "error");
             }
         } catch (error) {
-            console.log("error ", error.message);
+            setPropertiesOfMessage("inwalid data", "error");
         }
-        form._value.reset();
     } else {
-        console.log("you are already logged");
+        setPropertiesOfMessage("you are already logged in", "info");
     }
     form._value.reset();
-}
-
-/* const login = () => {
-    loginWithPopup()
-} */
+};
 </script>
 <template>
     <v-form ref="form">
@@ -112,21 +107,12 @@ async function login() {
             </v-row>
             <v-row>
                 <v-col>
-                    <v-btn type="reset">
-                        clear
-                    </v-btn>
-                    <v-btn @click="register()">
-                        Register
-                    </v-btn>
-                    <v-btn @click="login()" v-if="!isLogged">
-                        log in
-                    </v-btn>
-                    <v-btn @click=" logout()" v-else>
-                        log out
-                    </v-btn>
+                    <v-btn type="reset"> clear </v-btn>
+                    <v-btn @click="register()"> Register </v-btn>
+                    <v-btn @click="login()" v-if="!isLogged"> log in </v-btn>
+                    <v-btn @click="logout()" v-else> log out </v-btn>
                 </v-col>
             </v-row>
         </v-container>
     </v-form>
-
 </template>

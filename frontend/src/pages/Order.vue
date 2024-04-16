@@ -16,7 +16,12 @@ const isLogged = ref(false)
 const oneWayRef = ref()
 const typeTicketRef = ref()
 const form = ref();
-
+const emit = defineEmits(["setDisplayMessage", "setMessageRef", "setSeverityRef"]);
+const setPropertiesOfMessage = (message, severity) => {
+    emit("setDisplayMessage", true)
+    emit("setMessageRef", message)
+    emit("setSeverityRef", severity)
+};
 const setIsLogged = () => {
     if (sessionStorage.getItem("logged")) {
         isLogged.value = true
@@ -25,8 +30,14 @@ const setIsLogged = () => {
 setIsLogged()
 
 const handleOrder = () => {
-    order(companyRef.value, oneWayRef.value, typeTicketRef.value, ageModel.value, nameModel.value, endModel.value, startModel.value, surnameModel.value, dateIssueModel.value)
-    form._value.reset
+    if (companyRef.value && oneWayRef.value && typeTicketRef.value && ageModel.value && nameModel.value && endModel.value && startModel.value && surnameModel.value && dateIssueModel.value) {
+        const res = order(companyRef.value, oneWayRef.value, typeTicketRef.value, ageModel.value, nameModel.value, endModel.value, startModel.value, surnameModel.value, dateIssueModel.value)
+        setPropertiesOfMessage("adding", "info")
+        form.reset
+    } else {
+        setPropertiesOfMessage("not enough data", 'info')
+    }
+
 }
 const findCompanies = async () => {
     companies.value = [];
@@ -159,9 +170,4 @@ const findCompanies = async () => {
         </v-container>
 
     </v-form>
-    <p>{{ nameModel }}</p>
-    <p>{{ surnameModel }}</p>
-    <p>{{ startModel }}</p>
-    <p>{{ endModel }}</p>
-    <p>{{ ageModel }}</p>
 </template>

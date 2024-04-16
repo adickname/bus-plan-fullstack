@@ -56,9 +56,9 @@ app.post("/api/users/register", async (req, res) => {
     const { email, password } = req.body;
     const hash = await bcrypt.hash(password, 10);
     const user = await User.create({ email: email, password: hash });
-    res.status(200).send({ message: "added succesfully" });
+    res.status(200).send({ message: "registered succesfully" });
   } catch (error) {
-    console.log(error);
+    res.send({ message: error.message });
   }
 });
 
@@ -73,36 +73,16 @@ app.post("/api/schedules/bus-line", async (req, res) => {
         start: start,
         company: { $in: companies._value },
       });
-      console.log(schedule);
       if (schedule.length === 0) {
-        res.send({ message: "Cannot find. Check your data." });
+        res.json({ message: "Cannot find. Check your data." });
+      } else {
+        res.status(200).json(schedule);
       }
-      res.status(200).json(schedule);
-    } else if (req.body.end) {
-      const { end, companies } = req.body;
-      const schedule = await Schedule.find({
-        end: end,
-        company: { $in: companies._value },
-      });
-      if (schedule.length === 0) {
-        res.send({ message: "Cannot find. Check your data." });
-      }
-      res.status(200).json(schedule);
-    } else if (req.body.start) {
-      const { start } = req.body;
-      const schedule = await Schedule.find({
-        start: start,
-        company: { $in: companies._value },
-      });
-      if (schedule.length === 0) {
-        res.send({ message: "Cannot find. Check your data." });
-      }
-      res.status(200).json(schedule);
     } else {
-      res.send({ message: "Cannot find. Check your data." });
+      res.json({ message: "No enough data" });
     }
   } catch (error) {
-    console.log(error.message);
+    res.send({ message: error.message });
   }
 });
 
@@ -117,8 +97,9 @@ app.post("/api/schedules/bus-stops/filter-companies", async (req, res) => {
       });
       if (schedule.length === 0) {
         res.send({ message: "Cannot find. Check your data." });
+      } else {
+        res.status(200).json(schedule);
       }
-      res.status(200).json(schedule);
     } else if (req.body.end) {
       const { end, companies } = req.body;
       const schedule = await Schedule.find({
@@ -143,7 +124,7 @@ app.post("/api/schedules/bus-stops/filter-companies", async (req, res) => {
       res.send({ message: "Cannot find. Check your data." });
     }
   } catch (error) {
-    console.log(error.message);
+    res.send({ message: error.message });
   }
 });
 
@@ -158,7 +139,6 @@ app.post("/api/schedules/bus-stops", async (req, res) => {
           { "places.place": { $in: end } },
         ],
       });
-      console.log(schedule);
       if (schedule.length === 0) {
         res.send({ message: "Cannot find. Check your data." });
       } else {
@@ -166,7 +146,7 @@ app.post("/api/schedules/bus-stops", async (req, res) => {
       }
     }
   } catch (error) {
-    console.log(error.message);
+    res.send({ message: error.message });
   }
 });
 
@@ -177,7 +157,7 @@ app.get("/api/schedules/company", async (req, res) => {
     const company = await Schedule.distinct("company");
     res.status(200).json(company);
   } catch (error) {
-    console.log(error.message);
+    res.send({ message: error.message });
   }
 });
 
@@ -188,7 +168,7 @@ app.post("/api/orders/new", async (req, res) => {
     const user = await Order.create(req.body);
     res.status(200).send({ message: "added succesfully" });
   } catch (error) {
-    console.log(error);
+    res.send({ message: error.message });
   }
 });
 

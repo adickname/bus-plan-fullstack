@@ -7,22 +7,32 @@ const isDataDownloaded = ref(false);
 const scheduleToPass = ref();
 const companies = ref();
 const companiesFilter = ref([]);
-async function getCompanies() {
-    const res = await fetch("http://localhost:5170/api/schedules/company");
-    const company = res.json();
-    companies.value = await company;
+const emit = defineEmits(["setDisplayMessage", "setMessageRef", "setSeverityRef"]);
+const setPropertiesOfMessage = (message, severity) => {
+    emit("setDisplayMessage", true)
+    emit("setMessageRef", message)
+    emit("setSeverityRef", severity)
+};
+const getCompanies = async () => {
+    try {
+        const res = await fetch("http://localhost:5170/api/schedules/company");
+        const company = await res.json();
+        companies.value = await company;
+    } catch (error) {
+        setPropertiesOfMessage(error.message, "error")
+    }
 }
 getCompanies();
 
-function checkAll() {
+const checkAll = () => {
     companiesFilter.value = [...companies.value];
 }
 
-function uncheckAll() {
+const uncheckAll = () => {
     companiesFilter.value = [];
 }
 
-function validatingData(data) {
+const validatingData = (data) => {
     if (data) {
         if (data.length >= 3) {
             return true;
@@ -31,43 +41,80 @@ function validatingData(data) {
         return false;
     }
 }
-async function fetching(link, end, start) {
-    console.log(companiesFilter.value);
+const fetching = async (link, end, start) => {
     if (companiesFilter.value.length > 0) {
-        try {
-            const res = await fetch(link, {
-                method: "POST",
-                headers: {
-                    "Content-type": "application/json",
-                },
-                body: JSON.stringify({
-                    end: end,
-                    start: start,
-                    companies: companiesFilter,
-                }),
-            });
-            console.log("fetching");
-            const data = await res.json();
-            scheduleToPass.value = data;
-            isDataDownloaded.value = true;
-        } catch (error) {
-            console.log(error.message);
-        }
+        if (end && start) {
+            try {
+                const res = await fetch(link, {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        end: end,
+                        start: start,
+                        companies: companiesFilter,
+                    }),
+                });
+                const data = await res.json();
+                scheduleToPass.value = data;
+                isDataDownloaded.value = true;
+            }
+            catch (error) {
+                setPropertiesOfMessage(error.message, "error")
+            }
+        } else if (end) {
+            try {
+                const res = await fetch(link, {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        end: end,
+                        companies: companiesFilter,
+                    }),
+                });
+                const data = await res.json();
+                scheduleToPass.value = data;
+                isDataDownloaded.value = true;
+            }
+            catch (error) {
+                setPropertiesOfMessage(error.message, "error")
+            }
+        } else if (end, start)
+            try {
+                const res = await fetch(link, {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        start: start,
+                        companies: companiesFilter,
+                    }),
+                });
+                const data = await res.json();
+                scheduleToPass.value = data;
+                isDataDownloaded.value = true;
+            }
+            catch (error) {
+                setPropertiesOfMessage(error.message, "error")
+            }
+
     }
 }
-async function findScheduleAfterNameOfLine() {
+const findScheduleAfterNameOfLine = () => {
     const end = endModel.value;
     const start = startModel.value;
     if (validatingData(endModel.value) && validatingData(startModel.value)) {
         fetching(`http://localhost:5170/api/schedules/bus-line`, end, start);
-    } else if (validatingData(end)) {
-        fetching(`http://localhost:5170/api/schedules/bus-line`, end);
-    } else if (validatingData(start)) {
-        fetching(`http://localhost:5170/api/schedules/bus-line`, start);
+    } else {
+        setPropertiesOfMessage("not enough data", "info")
     }
 }
 
-async function findBusLine() {
+const findBusLine = () => {
     const end = endModel.value;
     const start = startModel.value;
     if (validatingData(endModel.value) && validatingData(startModel.value)) {
@@ -86,6 +133,8 @@ async function findBusLine() {
             `http://localhost:5170/api/schedules/bus-stops/filter-companies`,
             start
         );
+    } else {
+        setPropertiesOfMessage("no data", "info")
     }
 }
 </script>

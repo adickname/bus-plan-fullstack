@@ -55,6 +55,8 @@ setIsLogged()
                         <p>end:{{ ticket.end }}</p>
                         <p>date of isuue: {{ ticket.dateOfIssue }}</p>
                         <p>date of expiry: {{ ticket.dateOfExpiry }}</p>
+                        <p v-if="ticket.oneWay">one way</p>
+                        <p v-else>two ways</p>
                     </template>
                 </Card>
             </v-col>

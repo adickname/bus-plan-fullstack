@@ -56,6 +56,10 @@ const OrderSchema = mongoose.Schema(
       type: String,
       required: [true, "required"],
     },
+    oneWay: {
+      type: Boolean,
+      required: [true, "required"],
+    },
   },
   {
     timestamps: true,

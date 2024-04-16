@@ -23,7 +23,6 @@ export async function order(
   }
   if (typeTicket === "month") {
     const data = new Date(dateOfIssue);
-    console.log(data);
     dateOfIssue = `${data.getFullYear()}-${(data.getMonth() + 1)
       .toString()
       .padStart(2, "0")}-${data.getDate().toString().padStart(2, "0")}`;
@@ -34,14 +33,12 @@ export async function order(
       .toString()
       .padStart(2, "0")}-${dateOfExpiry.getDate().toString().padStart(2, "0")}`;
   }
-  console.log(dateOfIssue, dateOfExpiry);
 
   try {
     const res = await fetch(
       `http://localhost:5170/api/orders/prices?company=${company}`
     );
     dataPrice = await res.json();
-    console.log(await dataPrice);
     let multiplierTypeTicket;
     let multiplierOneWay;
     if (oneWay) {
@@ -82,10 +79,8 @@ export async function order(
         .forEach((elementOfLine) => {
           if (elementOfLine.place === end) {
             distance = elementOfLine.distance;
-            console.log(elementOfLine.place, elementOfLine.distance);
           }
           if (elementOfLine.place === start) {
-            console.log(elementOfLine.place, elementOfLine.distance);
             distance -= elementOfLine.distance;
           }
         });
@@ -106,7 +101,7 @@ export async function order(
       }
 
       try {
-        const res = await fetch("http://localhost:5170/api/orders/new", {
+        await fetch("http://localhost:5170/api/orders/new", {
           method: "POST",
           headers: {
             "Content-type": "application/json",
@@ -129,17 +124,20 @@ export async function order(
             dateOfIssue: dateOfIssue,
             dateOfExpiry: `${dateOfExpiry}`,
             typeTicket: typeTicket,
+            oneWay: oneWay,
           }),
         });
         const dataRes = await res.json();
-        console.log(await dataRes.message);
+        if (dataRes.message) {
+          return "added succesfully";
+        }
       } catch (error) {
-        console.log(error.message);
+        return error.message;
       }
     } catch (error) {
-      console.log(error.message);
+      return error.message;
     }
   } catch (error) {
-    console.log(error.message);
+    return error.message;
   }
 }
