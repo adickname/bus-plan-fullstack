@@ -1,7 +1,6 @@
 <script setup>
 import { defineModel, defineProps, defineEmits, ref } from "vue";
 import { useAuth0 } from '@auth0/auth0-vue';
-import { login as loginAuth } from "@/functions/auth0/login";
 const { loginWithRedirect, loginWithPopup } = useAuth0();
 const emit = defineEmits(['setIsLoggedInParent'])
 const props = defineProps(['onSubPage'])
@@ -14,12 +13,13 @@ async function register() {
     const email = emailModel.value;
     const password = passwordModel.value;
     const res = await fetch(
-        `http://localhost:5170/api/users/?email=${encodeURIComponent(email)}`,
-        {
-            headers: {
-                "Content-type": "application/json",
-            },
-        }
+        `http://localhost:5170/api/users`, {
+        method: "POST",
+        headers: {
+            "Content-type": "application/json",
+        },
+        body: JSON.stringify({ email: email })
+    }
     );
     const data = await res.json();
     console.log(data);
@@ -95,7 +95,7 @@ async function login() {
 }
 
 /* const login = () => {
-    loginWithRedirect()
+    loginWithPopup()
 } */
 </script>
 <template>

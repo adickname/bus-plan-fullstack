@@ -35,6 +35,9 @@ setIsLogged()
         <Login onSubPage="true" @set-is-logged-in-parent="setIsLogged"></Login>
     </v-container>
     <v-container v-else>
+        <p v-if="ticketsRef.length === 0">
+            You have not any tickets
+        </p>
         <v-row>
             <v-col cols="12" md="4" v-for="ticket in ticketsRef">
                 <Card>

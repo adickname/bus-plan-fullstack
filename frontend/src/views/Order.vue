@@ -17,14 +17,18 @@ const oneWayRef = ref()
 const typeTicketRef = ref()
 const form = ref();
 
-function setIsLogged() {
+const setIsLogged = () => {
     if (sessionStorage.getItem("logged")) {
         isLogged.value = true
     }
 }
 setIsLogged()
 
-async function findCompanies() {
+const handleOrder = () => {
+    order(companyRef.value, oneWayRef.value, typeTicketRef.value, ageModel.value, nameModel.value, endModel.value, startModel.value, surnameModel.value, dateIssueModel.value)
+    form._value.reset
+}
+const findCompanies = async () => {
     companies.value = [];
     try {
         const res = await fetch("http://localhost:5170/api/schedules/bus-stops", {
@@ -35,7 +39,6 @@ async function findCompanies() {
             body: JSON.stringify({ end: endModel.value, start: startModel.value }),
         });
         const data = await res.json();
-        console.log(data)
         data.forEach((element) => {
             let isFree = true;
             companies.value.forEach((elementCompanies) => {
@@ -87,12 +90,6 @@ async function findCompanies() {
                             <label for="day" class="ml-2">Jednodniowy</label>
                         </div>
                     </div>
-                    <!--     <div class="flex flex-wrap gap-3">
-                        <div class="flex align-items-center">
-                            <RadioButton v-model="typeTicketRef" inputId="week" name="typeTicket" value="week" />
-                            <label for="week" class="ml-2">Tygoniowy</label>
-                        </div>
-                    </div> -->
                     <div class="flex flex-wrap gap-3">
                         <div class="flex align-items-center">
                             <RadioButton v-model="typeTicketRef" inputId="month" name="typeTicket" value="month" />
@@ -154,9 +151,7 @@ async function findCompanies() {
                     <v-btn @click="findCompanies()" v-if="companies.length === 0">
                         Find companies
                     </v-btn>
-                    <v-btn
-                        @click="order(companyRef, oneWayRef, typeTicketRef, ageModel, nameModel, endModel, startModel, surnameModel, dateIssueModel)"
-                        v-else-if="companies.length > 0">
+                    <v-btn @click="handleOrder()" v-else-if="companies.length > 0">
                         order
                     </v-btn>
                 </v-col>

@@ -1,7 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const app = express();
 const cors = require("cors");
+const bcrypt = require("bcrypt");
+const app = express();
 const User = require("./models/user.model.js");
 const Schedule = require("./models/schedule.model.js");
 const Order = require("./models/order.model.js");
@@ -21,9 +22,14 @@ app.use((req, res, next) => {
 app.post("/api/users/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email: email, password: password });
+    const user = await User.findOne({ email: email });
     if (user) {
-      res.json({ isFound: true, userId: user.id });
+      const isPasswordValid = bcrypt.compare(password, user.password);
+      if (isPasswordValid) {
+        res.json({ isFound: true, userId: user.id });
+      } else {
+        res.json({ message: "inwalid password" });
+      }
     } else {
       res.send({ isFound: false });
     }
@@ -32,12 +38,10 @@ app.post("/api/users/login", async (req, res) => {
   }
 });
 
-app.get("/api/users/", async (req, res) => {
-  const email = decodeURIComponent(req.query.email);
-  console.log(email);
+app.post("/api/users", async (req, res) => {
+  const email = req.body.email;
   try {
     const user = await User.findOne({ email: email });
-    console.log(user);
     if (user) {
       res.send({ isFound: true });
     } else {
@@ -49,7 +53,9 @@ app.get("/api/users/", async (req, res) => {
 });
 app.post("/api/users/register", async (req, res) => {
   try {
-    const user = await User.create(req.body);
+    const { email, password } = req.body;
+    const hash = await bcrypt.hash(password, 10);
+    const user = await User.create({ email: email, password: hash });
     res.status(200).send({ message: "added succesfully" });
   } catch (error) {
     console.log(error);
