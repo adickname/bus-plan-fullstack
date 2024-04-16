@@ -13,12 +13,16 @@
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "primevue": "^3.51.0",
+    "tailwind": "^4.0.0",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0",
     "vuetify": "^3.5.14"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3",
     "vite": "^5.1.6"
   }
 }

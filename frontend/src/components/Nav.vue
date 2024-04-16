@@ -2,7 +2,6 @@
 import { RouterLink, RouterView } from "vue-router"
 import { ref } from "vue"
 import MegaMenu from 'primevue/megamenu';
-import Order from "@/views/Order.vue";
 
 const items = ref([{
     label: 'Home',

@@ -2,30 +2,30 @@ import { createWebHistory, createRouter } from "vue-router";
 
 export const router = createRouter({
   routes: [
-    { path: "/", component: () => import("./views/Home.vue"), name: "home" },
+    { path: "/", component: () => import("./pages/Home.vue"), name: "home" },
     {
       path: "/find",
-      component: () => import("./views/FindBus.vue"),
+      component: () => import("./pages/FindBus.vue"),
       name: "find",
     },
     {
       path: "/order",
-      component: () => import("./views/Order.vue"),
+      component: () => import("./pages/Order.vue"),
       name: "order",
     },
     {
       path: "/find",
-      component: () => import("./views/FindBus.vue"),
+      component: () => import("./pages/FindBus.vue"),
       name: "find",
     },
     {
       path: "/tickets",
-      component: () => import("./views/OwnTickets.vue"),
+      component: () => import("./pages/OwnTickets.vue"),
       name: "own-tickets",
     },
     {
       path: "/login",
-      component: () => import("./views/Login.vue"),
+      component: () => import("./pages/Login.vue"),
       name: "login",
     },
   ],
