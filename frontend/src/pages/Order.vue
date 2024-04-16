@@ -127,17 +127,18 @@ const findCompanies = async () => {
             </v-row>
             <v-row>
                 <template v-if="typeTicketRef">
-                    <template v-if="typeTicketRef === 'day' || typeTicketRef === 'week'">
+                    <template v-if="typeTicketRef === 'day'">
                         <v-col cols="12" md="4">
                             <p>Begin:</p>
-                            <Calendar v-model="dateIssueModel" showIcon :showOnFocus="false" date-format="mm/dd/yy" />
+                            <Calendar v-model="dateIssueModel" :pt="{ root: { class: 'border-2 border-white' } }"
+                                showIcon :showOnFocus="false" date-format="mm/dd/yy" />
                         </v-col>
                     </template>
                     <template v-if="typeTicketRef === 'month'">
                         <v-col cols="12" md="4">
                             <p>Begin</p>
-                            <Calendar v-model="dateIssueModel" showIcon :showOnFocus="false" view="month"
-                                date-format="mm/yy" />
+                            <Calendar v-model="dateIssueModel" :pt="{ root: { class: 'border-2 border-white' } }"
+                                showIcon :showOnFocus="false" view="month" date-format="mm/yy" />
                         </v-col>
                     </template>
                 </template>
