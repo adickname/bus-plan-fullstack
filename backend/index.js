@@ -1,12 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const bcrypt = require("bcrypt");
 const app = express();
-const User = require("./models/user.model.js");
-const Schedule = require("./models/schedule.model.js");
-const Order = require("./models/order.model.js");
-const Price = require("./models/price.model.js");
+const userRoute = require("./routes/user.route.js");
+const scheduleRoute = require("./routes/schedule.route.js");
+const orderRoute = require("./routes/order.route.js");
 app.use(express.json());
 app.use(cors());
 
@@ -17,179 +15,9 @@ app.use((req, res, next) => {
   next();
 });
 
-//user
-
-app.post("/api/users/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email: email });
-    if (user) {
-      const isPasswordValid = bcrypt.compare(password, user.password);
-      if (isPasswordValid) {
-        res.json({ isFound: true, userId: user.id });
-      } else {
-        res.json({ message: "inwalid password" });
-      }
-    } else {
-      res.send({ isFound: false });
-    }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-app.post("/api/users", async (req, res) => {
-  const email = req.body.email;
-  try {
-    const user = await User.findOne({ email: email });
-    if (user) {
-      res.send({ isFound: true });
-    } else {
-      res.send({ isFound: false });
-    }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-app.post("/api/users/register", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const hash = await bcrypt.hash(password, 10);
-    const user = await User.create({ email: email, password: hash });
-    res.status(200).send({ message: "registered succesfully" });
-  } catch (error) {
-    res.send({ message: error.message });
-  }
-});
-
-//schedule
-
-app.post("/api/schedules/bus-line", async (req, res) => {
-  try {
-    if (req.body.end && req.body.start) {
-      const { end, start, companies } = req.body;
-      const schedule = await Schedule.find({
-        end: end,
-        start: start,
-        company: { $in: companies._value },
-      });
-      if (schedule.length === 0) {
-        res.json({ message: "Cannot find. Check your data." });
-      } else {
-        res.status(200).json(schedule);
-      }
-    } else {
-      res.json({ message: "No enough data" });
-    }
-  } catch (error) {
-    res.send({ message: error.message });
-  }
-});
-
-app.post("/api/schedules/bus-stops/filter-companies", async (req, res) => {
-  try {
-    if (req.body.end && req.body.start) {
-      const { end, start, companies } = req.body;
-      const schedule = await Schedule.find({
-        "places.place": { $regex: `${start}` },
-        "places.place": { $regex: `${end}` },
-        company: { $in: companies._value },
-      });
-      if (schedule.length === 0) {
-        res.send({ message: "Cannot find. Check your data." });
-      } else {
-        res.status(200).json(schedule);
-      }
-    } else if (req.body.end) {
-      const { end, companies } = req.body;
-      const schedule = await Schedule.find({
-        "places.place": { $regex: `${end}` },
-        company: { $in: companies._value },
-      });
-      if (schedule.length === 0) {
-        res.send({ message: "Cannot find. Check your data." });
-      }
-      res.status(200).json(schedule);
-    } else if (req.body.start) {
-      const { start } = req.body;
-      const schedule = await Schedule.find({
-        "places.place": { $regex: `${start}` },
-        company: { $in: companies._value },
-      });
-      if (schedule.length === 0) {
-        res.send({ message: "Cannot find. Check your data." });
-      }
-      res.status(200).json(schedule);
-    } else {
-      res.send({ message: "Cannot find. Check your data." });
-    }
-  } catch (error) {
-    res.send({ message: error.message });
-  }
-});
-
-app.post("/api/schedules/bus-stops", async (req, res) => {
-  try {
-    if (req.body.end && req.body.start) {
-      const { end, start } = req.body;
-      console.log(end, start);
-      const schedule = await Schedule.find({
-        $and: [
-          { "places.place": { $in: start } },
-          { "places.place": { $in: end } },
-        ],
-      });
-      if (schedule.length === 0) {
-        res.send({ message: "Cannot find. Check your data." });
-      } else {
-        res.status(200).json(schedule);
-      }
-    }
-  } catch (error) {
-    res.send({ message: error.message });
-  }
-});
-
-//companies
-
-app.get("/api/schedules/company", async (req, res) => {
-  try {
-    const company = await Schedule.distinct("company");
-    res.status(200).json(company);
-  } catch (error) {
-    res.send({ message: error.message });
-  }
-});
-
-//orders
-
-app.post("/api/orders/new", async (req, res) => {
-  try {
-    const user = await Order.create(req.body);
-    res.status(200).send({ message: "added succesfully" });
-  } catch (error) {
-    res.send({ message: error.message });
-  }
-});
-
-app.post("/api/orders/find", async (req, res) => {
-  try {
-    const tickets = await Order.find({ owner: req.body.owner });
-    res.status(200).json(tickets);
-  } catch (error) {
-    res.send({ message: error.message });
-  }
-});
-
-app.get("/api/orders/prices", async (req, res) => {
-  try {
-    const price = await Price.findOne({ company: req.query.company });
-    res.status(200).json(price);
-  } catch (error) {
-    res.send({ message: error.message });
-  }
-});
-
+app.use("/api/users", userRoute);
+app.use("/api/schedules", scheduleRoute);
+app.use("/api/orders", orderRoute);
 mongoose
   .connect(
     "mongodb+srv://pasterkaadrian:uCgtPdtkelF8mz40@cluster-0.vsqoqx6.mongodb.net/Node-API?retryWrites=true&w=majority&appName=Cluster-0"
