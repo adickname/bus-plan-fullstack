@@ -113,7 +113,8 @@ const findCompanies = async () => {
                 <v-col cols="12" md="4">
                     <div class="flex flex-wrap gap-3">
                         <div class="flex align-items-center">
-                            <RadioButton v-model="oneWayRef" inputId="oneWay" name="oneWay" value="true" />
+                            <RadioButton v-model="oneWayRef" inputId="oneWay" name="oneWay" value="true"
+                                :pt="{ box: { class: 'text-white' } }" :unstyled="true" />
                             <label for="oneWay" class="ml-2">W jedną stronę</label>
                         </div>
                     </div>
@@ -137,8 +138,8 @@ const findCompanies = async () => {
                     <template v-if="typeTicketRef === 'month'">
                         <v-col cols="12" md="4">
                             <p>Begin</p>
-                            <Calendar v-model="dateIssueModel" :pt="{ root: { class: 'border-2 border-white' } }"
-                                showIcon :showOnFocus="false" view="month" date-format="mm/yy" />
+                            <Calendar v-model="dateIssueModel" :pt="{ input: { class: 'caret-white' } }" showIcon
+                                :showOnFocus="false" view="month" date-format="mm/yy" />
                         </v-col>
                     </template>
                 </template>
@@ -148,7 +149,8 @@ const findCompanies = async () => {
                     <template v-for="company in companies">
                         <div class="flex flex-wrap gap-3">
                             <div class="flex align-items-center">
-                                <RadioButton v-model="companyRef" :inputId="company" name="company" :value="company" />
+                                <RadioButton v-model="companyRef" :inputId="company" name="company" :value="company"
+                                    :unstyled="true" :pt="{ root: { class: 'border-10 border-white' } }" />
                                 <label :for="company" class="ml-2">{{ company }}</label>
                             </div>
                         </div>

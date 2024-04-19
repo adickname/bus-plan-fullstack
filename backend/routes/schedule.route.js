@@ -24,7 +24,7 @@ router.post("/bus-line", async (req, res) => {
   }
 });
 
-router.get("/company", async (req, res) => {
+router.get("/companies", async (req, res) => {
   try {
     const company = await Schedule.distinct("company");
     res.status(200).json(company);

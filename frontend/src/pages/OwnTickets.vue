@@ -52,6 +52,9 @@ setIsLogged()
                         <p>
                             start:{{ ticket.start }}
                         </p>
+                        <p>
+                            pirce:{{ ticket.fakePrice }}
+                        </p>
                         <p>end:{{ ticket.end }}</p>
                         <p>date of isuue: {{ ticket.dateOfIssue }}</p>
                         <p>date of expiry: {{ ticket.dateOfExpiry }}</p>

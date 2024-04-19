@@ -15,7 +15,7 @@ const setPropertiesOfMessage = (message, severity) => {
 };
 const getCompanies = async () => {
     try {
-        const res = await fetch("http://localhost:5170/api/schedules/company");
+        const res = await fetch("http://localhost:5170/api/schedules/companies");
         const company = await res.json();
         companies.value = await company;
     } catch (error) {
