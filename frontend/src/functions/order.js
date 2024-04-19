@@ -36,7 +36,7 @@ export async function order(
 
   try {
     const res = await fetch(
-      `http://localhost:5170/api/orders/prices?company=${company}`
+      `${import.meta.env.VITE_SERVER}/api/orders/prices?company=${company}`
     );
     dataPrice = await res.json();
     let multiplierTypeTicket;
@@ -101,7 +101,7 @@ export async function order(
       }
 
       try {
-        await fetch("http://localhost:5170/api/orders/new", {
+        await fetch(`${import.meta.env.VITE_SERVER}/api/orders/new`, {
           method: "POST",
           headers: {
             "Content-type": "application/json",

@@ -1,13 +1,16 @@
 export async function findCompanies(end, start) {
   companies.value = [];
   try {
-    const res = await fetch("http://localhost:5170/api/schedules/bus-stops", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({ end: end, start: start }),
-    });
+    const res = await fetch(
+      `${import.meta.env.VITE_SERVER}/api/schedules/bus-stops`,
+      {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ end: end, start: start }),
+      }
+    );
     const data = await res.json();
     data.forEach((element) => {
       let isFree = true;

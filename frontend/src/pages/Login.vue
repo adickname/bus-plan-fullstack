@@ -14,7 +14,7 @@ const setPropertiesOfMessage = (message, severity) => {
 const register = async () => {
     const email = emailModel.value;
     const password = passwordModel.value;
-    const res = await fetch(`http://localhost:5170/api/users`, {
+    const res = await fetch(`${import.meta.env.VITE_SERVER}/api/users`, {
         method: "POST",
         headers: {
             "Content-type": "application/json",
@@ -27,7 +27,7 @@ const register = async () => {
     } else {
         setPropertiesOfMessage("adding", "info");
         try {
-            const res = await fetch("http://localhost:5170/api/users/register", {
+            const res = await fetch(`${import.meta.env.VITE_SERVER}/api/users/register`, {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
@@ -65,7 +65,7 @@ const login = async () => {
         const email = emailModel.value;
         const password = passwordModel.value;
         try {
-            const res = await fetch(`http://localhost:5170/api/users/login`, {
+            const res = await fetch(`${import.meta.env.VITE_SERVER}/api/users/login`, {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",

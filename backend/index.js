@@ -20,11 +20,9 @@ app.use("/api/users", userRoute);
 app.use("/api/schedules", scheduleRoute);
 app.use("/api/orders", orderRoute);
 mongoose
-  .connect(
-    `mongodb+srv://${process.env.VITE_DB_USER}:${process.env.VITE_DB_PASSWORD}@cluster-0.vsqoqx6.mongodb.net/Node-API?retryWrites=true&w=majority&appName=Cluster-0`
-  )
+  .connect(process.env.MONGO_CONNECT)
   .then(() => {
-    app.listen(5170, () => {});
+    app.listen(process.env.SERVER_PORT, () => {});
     console.log("Connected to database");
   })
   .catch(() => console.log("not connected"));
