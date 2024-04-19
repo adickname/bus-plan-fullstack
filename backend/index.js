@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+require("dotenv").config();
 const app = express();
 const userRoute = require("./routes/user.route.js");
 const scheduleRoute = require("./routes/schedule.route.js");
@@ -20,7 +21,7 @@ app.use("/api/schedules", scheduleRoute);
 app.use("/api/orders", orderRoute);
 mongoose
   .connect(
-    "mongodb+srv://pasterkaadrian:uCgtPdtkelF8mz40@cluster-0.vsqoqx6.mongodb.net/Node-API?retryWrites=true&w=majority&appName=Cluster-0"
+    `mongodb+srv://${process.env.VITE_DB_USER}:${process.env.VITE_DB_PASSWORD}@cluster-0.vsqoqx6.mongodb.net/Node-API?retryWrites=true&w=majority&appName=Cluster-0`
   )
   .then(() => {
     app.listen(5170, () => {});
