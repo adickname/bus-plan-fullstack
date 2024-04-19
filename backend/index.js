@@ -13,6 +13,7 @@ const allowedOrigins = [
   process.env.CLIENT_APP_URL_RENDER,
 ];
 app.use((req, res, next) => {
+  const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
   }
@@ -20,8 +21,6 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
-
-console.log(process.env.MONGO_CONNECT);
 
 app.use("/api/users", userRoute);
 app.use("/api/schedules", scheduleRoute);
