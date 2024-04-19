@@ -6,7 +6,7 @@ const isLogged = ref(false)
 const ticketsRef = ref([])
 const findTcikets = async () => {
     try {
-        const res = await fetch(`${import.meta.env.SERVER}/api/orders/find`, {
+        const res = await fetch(`${import.meta.env.VITE_SERVER}/api/orders/find`, {
             method: "POST",
             headers: {
                 "Content-type": "application/json",
