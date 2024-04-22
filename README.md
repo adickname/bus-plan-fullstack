@@ -20,19 +20,19 @@ cd backend
 npm install
 ```
 
-### Setting Up Environment Variables
+# Setting Up Environment Variables
 
 ## Frontend
 
 Inside frontend folder create .env file
 
-# Example
+### Example
 
 VITE_SERVER = http://localhost:5173
 
 ## Backend
 
-# Example
+### Example
 
 CLIENT_APP_URL=http://localhost/5173
 CLIENT_APP_URL_RENDER= linkToYourApp.onrender.com
