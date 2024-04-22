@@ -97,13 +97,15 @@ const findCompanies = async () => {
                 <v-col cols="12" md="4">
                     <div class="flex flex-wrap gap-3">
                         <div class="flex align-items-center">
-                            <RadioButton v-model="typeTicketRef" inputId="day" name="typeTicket" value="day" />
+                            <RadioButton v-model="typeTicketRef" inputId="day" name="typeTicket" value="day"
+                                :pt="{ input: { class: 'w-6 h-6' } }" :unstyled="true" />
                             <label for="day" class="ml-2">Jednodniowy</label>
                         </div>
                     </div>
                     <div class="flex flex-wrap gap-3">
                         <div class="flex align-items-center">
-                            <RadioButton v-model="typeTicketRef" inputId="month" name="typeTicket" value="month" />
+                            <RadioButton v-model="typeTicketRef" inputId="month" name="typeTicket" value="month"
+                                :pt="{ input: { class: 'w-6 h-6' } }" :unstyled="true" />
                             <label for="month" class="ml-2">Miesięczny</label>
                         </div>
                     </div>
@@ -114,13 +116,14 @@ const findCompanies = async () => {
                     <div class="flex flex-wrap gap-3">
                         <div class="flex align-items-center">
                             <RadioButton v-model="oneWayRef" inputId="oneWay" name="oneWay" value="true"
-                                :pt="{ box: { class: 'text-white' } }" :unstyled="true" />
+                                :pt="{ input: { class: 'w-6 h-6' } }" :unstyled="true" />
                             <label for="oneWay" class="ml-2">W jedną stronę</label>
                         </div>
                     </div>
                     <div class="flex flex-wrap gap-3">
                         <div class="flex align-items-center">
-                            <RadioButton v-model="oneWayRef" inputId="round-trip" name="oneWay" value="false" />
+                            <RadioButton v-model="oneWayRef" inputId="round-trip" name="oneWay" value="false"
+                                :pt="{ input: { class: 'w-6 h-6' } }" :unstyled="true" />
                             <label for="round-trip" class="ml-2">W obie strony</label>
                         </div>
                     </div>
@@ -138,8 +141,8 @@ const findCompanies = async () => {
                     <template v-if="typeTicketRef === 'month'">
                         <v-col cols="12" md="4">
                             <p>Begin</p>
-                            <Calendar v-model="dateIssueModel" :pt="{ input: { class: 'caret-white' } }" showIcon
-                                :showOnFocus="false" view="month" date-format="mm/yy" />
+                            <Calendar v-model="dateIssueModel" :pt="{ root: { class: 'border-2 border-white' } }"
+                                showIcon :showOnFocus="false" view="month" date-format="mm/yy" />
                         </v-col>
                     </template>
                 </template>
