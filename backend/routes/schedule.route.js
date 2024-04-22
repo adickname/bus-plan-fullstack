@@ -7,8 +7,8 @@ router.post("/bus-line", async (req, res) => {
     if (req.body.end && req.body.start) {
       const { end, start, companies } = req.body;
       const schedule = await Schedule.find({
-        end: end,
-        start: start,
+        end: end.toLowerCase(),
+        start: start.toLowerCase(),
         company: { $in: companies._value },
       });
       if (schedule.length === 0) {
@@ -38,8 +38,8 @@ router.post("/bus-stops/filter-companies", async (req, res) => {
     if (req.body.end && req.body.start) {
       const { end, start, companies } = req.body;
       const schedule = await Schedule.find({
-        "places.place": { $regex: `${start}` },
-        "places.place": { $regex: `${end}` },
+        "places.place": { $regex: `${start.toLowerCase()}` },
+        "places.place": { $regex: `${end.toLowerCase()}` },
         company: { $in: companies._value },
       });
       if (schedule.length === 0) {
@@ -50,7 +50,7 @@ router.post("/bus-stops/filter-companies", async (req, res) => {
     } else if (req.body.end) {
       const { end, companies } = req.body;
       const schedule = await Schedule.find({
-        "places.place": { $regex: `${end}` },
+        "places.place": { $regex: `${end.toLowerCase()}` },
         company: { $in: companies._value },
       });
       if (schedule.length === 0) {
@@ -60,7 +60,7 @@ router.post("/bus-stops/filter-companies", async (req, res) => {
     } else if (req.body.start) {
       const { start } = req.body;
       const schedule = await Schedule.find({
-        "places.place": { $regex: `${start}` },
+        "places.place": { $regex: `${start.toLowerCase()}` },
         company: { $in: companies._value },
       });
       if (schedule.length === 0) {
@@ -81,8 +81,8 @@ router.post("/bus-stops", async (req, res) => {
       const { end, start } = req.body;
       const schedule = await Schedule.find({
         $and: [
-          { "places.place": { $in: start } },
-          { "places.place": { $in: end } },
+          { "places.place": { $in: start.toLowerCase() } },
+          { "places.place": { $in: end.toLowerCase() } },
         ],
       });
       if (schedule.length === 0) {
