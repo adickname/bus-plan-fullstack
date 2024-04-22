@@ -33,7 +33,7 @@ const handleOrder = () => {
     if (companyRef.value && oneWayRef.value && typeTicketRef.value && ageModel.value && nameModel.value && endModel.value && startModel.value && surnameModel.value && dateIssueModel.value) {
         const res = order(companyRef.value, oneWayRef.value, typeTicketRef.value, ageModel.value, nameModel.value, endModel.value, startModel.value, surnameModel.value, dateIssueModel.value)
         setPropertiesOfMessage("adding", "info")
-        form.reset
+        form._value.reset()
     } else {
         setPropertiesOfMessage("not enough data", 'info')
     }
@@ -153,7 +153,7 @@ const findCompanies = async () => {
                         <div class="flex flex-wrap gap-3">
                             <div class="flex align-items-center">
                                 <RadioButton v-model="companyRef" :inputId="company" name="company" :value="company"
-                                    :unstyled="true" :pt="{ root: { class: 'border-10 border-white' } }" />
+                                    :unstyled="true" :pt="{ input: { class: 'w-6 h-6' } }" />
                                 <label :for="company" class="ml-2">{{ company }}</label>
                             </div>
                         </div>
