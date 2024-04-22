@@ -28,16 +28,20 @@ Inside frontend folder create .env file
 
 ### Example
 
+```sh
 VITE_SERVER = http://localhost:5173
+```
 
 ## Backend
 
 ### Example
 
+```sh
 CLIENT_APP_URL=http://localhost/5173
 CLIENT_APP_URL_RENDER= linkToYourApp.onrender.com
 MONGO_CONNECT=connectionStringToYourMongoDB
 SERVER_PORT=5170
+```
 
 ### Compile and Hot-Reload for Development Frontend
 
