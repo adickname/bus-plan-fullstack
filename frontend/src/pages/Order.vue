@@ -42,7 +42,7 @@ const handleOrder = () => {
 const findCompanies = async () => {
     companies.value = [];
     try {
-        const res = await fetch(`${import.meta.env.SERVER}/api/schedules/bus-stops`, {
+        const res = await fetch(`${import.meta.env.VITE_SERVER}/api/schedules/bus-stops`, {
             method: "POST",
             headers: {
                 "Content-type": "application/json",
