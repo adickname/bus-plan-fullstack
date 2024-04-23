@@ -3,6 +3,13 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const User = require("../models/user.model.js");
 
+router.delete("/", async (req, res) => {
+  const { user } = req.body;
+  let fakeUser = await User.findOne({ email: user });
+  await User.deleteOne({ email: user });
+  res.send({ message: "deleting fake user" });
+});
+
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
