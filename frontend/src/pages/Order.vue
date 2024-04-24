@@ -153,7 +153,7 @@ const findCompanies = async () => {
                         <div class="flex flex-wrap gap-3">
                             <div class="flex align-items-center">
                                 <RadioButton v-model="companyRef" :inputId="company" name="company" :value="company"
-                                    :unstyled="true" :pt="{ input: { class: 'w-6 h-6' } }" />
+                                    class="company" :unstyled="true" :pt="{ input: { class: 'w-6 h-6' } }" />
                                 <label :for="company" class="ml-2">{{ company }}</label>
                             </div>
                         </div>

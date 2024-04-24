@@ -108,9 +108,9 @@ const login = async () => {
             <v-row>
                 <v-col>
                     <v-btn type="reset"> clear </v-btn>
-                    <v-btn @click="register()"> Register </v-btn>
-                    <v-btn @click="login()" v-if="!isLogged"> log in </v-btn>
-                    <v-btn @click="logout()" v-else> log out </v-btn>
+                    <v-btn @click="register()" id="register"> Register </v-btn>
+                    <v-btn @click="login()" v-if="!isLogged" id="logIn"> log in </v-btn>
+                    <v-btn @click="logout()" v-else id="logOut"> log out </v-btn>
                 </v-col>
             </v-row>
         </v-container>

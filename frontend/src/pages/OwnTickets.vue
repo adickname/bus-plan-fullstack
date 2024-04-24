@@ -40,7 +40,7 @@ setIsLogged()
         </p>
         <v-row>
             <v-col cols="12" md="4" v-for="ticket in ticketsRef">
-                <Card>
+                <Card class="ticket">
                     <template #title>{{ ticket.company }}</template>
                     <template #content>
                         <p>
