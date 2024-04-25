@@ -1,4 +1,5 @@
 <script setup>
+import { useAuth0 } from '@auth0/auth0-vue'
 import { ref, defineModel } from "vue";
 import RadioButton from 'primevue/radiobutton';
 import Calendar from 'primevue/calendar';
@@ -22,12 +23,6 @@ const setPropertiesOfMessage = (message, severity) => {
     emit("setMessageRef", message)
     emit("setSeverityRef", severity)
 };
-const setIsLogged = () => {
-    if (sessionStorage.getItem("logged")) {
-        isLogged.value = true
-    }
-}
-setIsLogged()
 
 const handleOrder = () => {
     if (companyRef.value && oneWayRef.value && typeTicketRef.value && ageModel.value && nameModel.value && endModel.value && startModel.value && surnameModel.value && dateIssueModel.value) {
@@ -67,11 +62,12 @@ const findCompanies = async () => {
     }
 }
 
+const { isAuthenticated, user } = useAuth0()
 
 </script>
 <template>
     <v-form ref="form">
-        <v-container v-if="!isLogged">
+        <v-container v-if="!isAuthenticated">
             <p>You must be logged to use this subpage</p>
             <Login onSubPage="true" @set-is-logged-in-parent="setIsLogged"></Login>
         </v-container>

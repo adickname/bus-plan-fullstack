@@ -1,8 +1,8 @@
 <script setup>
+import { useAuth0 } from '@auth0/auth0-vue'
 import Login from "./Login.vue"
 import Card from 'primevue/card'
 import { ref } from "vue";
-const isLogged = ref(false)
 const ticketsRef = ref([])
 const findTcikets = async () => {
     try {
@@ -21,16 +21,12 @@ const findTcikets = async () => {
         console.log(error.message)
     }
 }
-const setIsLogged = () => {
-    if (sessionStorage.getItem("logged")) {
-        isLogged.value = true
-        findTcikets()
-    }
-}
-setIsLogged()
+
+const { isAuthenticated, user } = useAuth0()
+
 </script>
 <template>
-    <v-container v-if="!isLogged">
+    <v-container v-if="!isAuthenticated">
         <p>You must be logged to use this subpage</p>
         <Login onSubPage="true" @set-is-logged-in-parent="setIsLogged"></Login>
     </v-container>

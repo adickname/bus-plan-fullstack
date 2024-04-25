@@ -1,4 +1,5 @@
 import { createWebHistory, createRouter } from "vue-router";
+import { authGuard } from "@auth0/auth0-vue";
 
 export const router = createRouter({
   routes: [
@@ -12,6 +13,7 @@ export const router = createRouter({
       path: "/order",
       component: () => import("./pages/Order.vue"),
       name: "order",
+      beforeEnter: authGuard,
     },
     {
       path: "/find",
@@ -22,11 +24,13 @@ export const router = createRouter({
       path: "/tickets",
       component: () => import("./pages/OwnTickets.vue"),
       name: "own-tickets",
+      beforeEnter: authGuard,
     },
     {
       path: "/login",
       component: () => import("./pages/Login.vue"),
       name: "login",
+      beforeEnter: authGuard,
     },
   ],
   history: createWebHistory(),
