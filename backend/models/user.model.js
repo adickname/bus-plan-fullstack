@@ -1,11 +1,7 @@
 const mongoose = require("mongoose");
 const UserSchema = mongoose.Schema(
   {
-    email: {
-      type: String,
-      required: [true, "required"],
-    },
-    password: {
+    subAuth0: {
       type: String,
       required: [true, "required"],
     },

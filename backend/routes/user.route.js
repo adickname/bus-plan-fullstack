@@ -30,9 +30,9 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const email = req.body.email;
+  const { subAuth0 } = req.body;
   try {
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ subAuth0: subAuth0 });
     if (user) {
       res.send({ isFound: true });
     } else {
@@ -42,12 +42,14 @@ router.post("/", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
 router.post("/register", async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const hash = await bcrypt.hash(password, 10);
-    const user = await User.create({ email: email, password: hash });
-    res.status(200).send({ message: "registered succesfully" });
+    const { subAuth0 } = req.body;
+    const user = await User.create({ subAuth0: subAuth0 });
+    if (user) {
+      res.status(200).send({ message: "registered succesfully" });
+    }
   } catch (error) {
     res.send({ message: error.message });
   }

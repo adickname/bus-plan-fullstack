@@ -1,5 +1,6 @@
 import { createApp } from "vue";
 import PrimeVue from "primevue/config";
+import { createPinia } from "pinia";
 import { createAuth0 } from "@auth0/auth0-vue";
 import "primevue/resources/themes/lara-dark-indigo/theme.css";
 import "tailwindcss/tailwind.css";
@@ -16,6 +17,7 @@ const vuetify = createVuetify({
 });
 import { router } from "./router.js";
 const app = createApp(App);
+const pinia = createPinia();
 app.use(
   createAuth0({
     domain: import.meta.env.VITE_AUTH0_DOMAIN,
@@ -25,4 +27,4 @@ app.use(
     },
   })
 );
-app.use(router).use(vuetify).use(PrimeVue).mount("#app");
+app.use(router).use(vuetify).use(PrimeVue).use(pinia).mount("#app");

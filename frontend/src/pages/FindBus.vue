@@ -1,142 +1,88 @@
 <script setup>
 import { defineModel, ref } from "vue";
 import Schedule from "../components/Schedule.vue";
+import { useScheduleStore } from "@/store/scheduleStore";
+const scheduleStore = useScheduleStore()
+const { getSchedule, getIsDataDownloaded, fetching, hej } = scheduleStore;
+hej()
+const scheduleToPass = ref(getSchedule);
+const companies = ref(getIsDataDownloaded);
 const endModel = defineModel("end");
 const startModel = defineModel("start");
 const isDataDownloaded = ref(false);
-const scheduleToPass = ref();
-const companies = ref();
 const companiesFilter = ref([]);
-const emit = defineEmits(["setDisplayMessage", "setMessageRef", "setSeverityRef"]);
+import { validatingData } from "@/functions/validatingData";
+const emit = defineEmits([
+    "setDisplayMessage",
+    "setMessageRef",
+    "setSeverityRef",
+]);
 const setPropertiesOfMessage = (message, severity) => {
-    emit("setDisplayMessage", true)
-    emit("setMessageRef", message)
-    emit("setSeverityRef", severity)
+    emit("setDisplayMessage", true);
+    emit("setMessageRef", message);
+    emit("setSeverityRef", severity);
 };
 const getCompanies = async () => {
     try {
-        const res = await fetch(`${import.meta.env.VITE_API_SERVER_URL}/api/schedules/companies`);
+        const res = await fetch(
+            `${import.meta.env.VITE_API_SERVER_URL}/api/schedules/companies`
+        );
         const company = await res.json();
         companies.value = await company;
     } catch (error) {
-        setPropertiesOfMessage(error.message, "error")
+        setPropertiesOfMessage(error.message, "error");
     }
-}
+};
 getCompanies();
 
 const checkAll = () => {
     companiesFilter.value = [...companies.value];
-}
+};
 
 const uncheckAll = () => {
     companiesFilter.value = [];
-}
+};
 
-const validatingData = (data) => {
-    if (data) {
-        if (data.length >= 3) {
-            return true;
-        }
-    } else {
-        return false;
-    }
-}
-const fetching = async (link, end, start) => {
-    if (companiesFilter.value.length > 0) {
-        if (end && start) {
-            try {
-                const res = await fetch(link, {
-                    method: "POST",
-                    headers: {
-                        "Content-type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        end: end,
-                        start: start,
-                        companies: companiesFilter,
-                    }),
-                });
-                const data = await res.json();
-                scheduleToPass.value = data;
-                isDataDownloaded.value = true;
-            }
-            catch (error) {
-                setPropertiesOfMessage(error.message, "error")
-            }
-        } else if (end) {
-            try {
-                const res = await fetch(link, {
-                    method: "POST",
-                    headers: {
-                        "Content-type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        end: end,
-                        companies: companiesFilter,
-                    }),
-                });
-                const data = await res.json();
-                scheduleToPass.value = data;
-                isDataDownloaded.value = true;
-            }
-            catch (error) {
-                setPropertiesOfMessage(error.message, "error")
-            }
-        } else if (end, start)
-            try {
-                const res = await fetch(link, {
-                    method: "POST",
-                    headers: {
-                        "Content-type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        start: start,
-                        companies: companiesFilter,
-                    }),
-                });
-                const data = await res.json();
-                scheduleToPass.value = data;
-                isDataDownloaded.value = true;
-            }
-            catch (error) {
-                setPropertiesOfMessage(error.message, "error")
-            }
-
-    }
-}
 const findScheduleAfterNameOfLine = () => {
     const end = endModel.value;
     const start = startModel.value;
     if (validatingData(endModel.value) && validatingData(startModel.value)) {
-        fetching(`${import.meta.env.VITE_API_SERVER_URL}/api/schedules/bus-line`, end, start);
+        fetching(
+            `${import.meta.env.VITE_API_SERVER_URL}/api/schedules/bus-line`,
+            end,
+            start, companiesFilter.value
+        );
     } else {
-        setPropertiesOfMessage("not enough data", "info")
+        setPropertiesOfMessage("not enough data", "info");
     }
-}
+};
 
 const findBusLine = () => {
     const end = endModel.value;
     const start = startModel.value;
     if (validatingData(endModel.value) && validatingData(startModel.value)) {
         fetching(
-            `${import.meta.env.VITE_API_SERVER_URL}/api/schedules/bus-stops/filter-companies`,
+            `${import.meta.env.VITE_API_SERVER_URL
+            }/api/schedules/bus-stops/filter-companies`,
             end,
-            start
+            start, companiesFilter.value
         );
     } else if (validatingData(end)) {
         fetching(
-            `${import.meta.env.VITE_API_SERVER_URL}/api/schedules/bus-stops/filter-companies`,
-            end
+            `${import.meta.env.VITE_API_SERVER_URL
+            }/api/schedules/bus-stops/filter-companies`,
+            end, companiesFilter.value
         );
     } else if (validatingData(start)) {
         fetching(
-            `${import.meta.env.VITE_API_SERVER_URL}/api/schedules/bus-stops/filter-companies`,
-            start
+            `${import.meta.env.VITE_API_SERVER_URL
+            }/api/schedules/bus-stops/filter-companies`,
+            start, companiesFilter.value
         );
     } else {
-        setPropertiesOfMessage("no data", "info")
+        setPropertiesOfMessage("no data", "info");
     }
-}
+};
 </script>
 <template>
     <v-form>
