@@ -4,33 +4,37 @@ import Login from "./Login.vue"
 import Card from 'primevue/card'
 import { ref } from "vue";
 const ticketsRef = ref([])
+const { user } = useAuth0()
+
+const emit = defineEmits(["setDisplayMessage", "setMessageRef", "setSeverityRef"]);
+const setPropertiesOfMessage = (message, severity) => {
+    emit("setDisplayMessage", true)
+    emit("setMessageRef", message)
+    emit("setSeverityRef", severity)
+};
+
+
 const findTcikets = async () => {
     try {
-        const res = await fetch(`${import.meta.env.VITE_SERVER}/api/orders/find`, {
+        const res = await fetch(`${import.meta.env.VITE_API_SERVER_URL}/api/orders/find`, {
             method: "POST",
             headers: {
                 "Content-type": "application/json",
             },
-            body: JSON.stringify({ owner: sessionStorage.getItem("id") })
+            body: JSON.stringify({ owner: user.value.sub })
         }
         )
         const tickets = await res.json()
         ticketsRef.value = tickets
     }
     catch (error) {
-        console.log(error.message)
+        setPropertiesOfMessage(error.message, "error")
     }
 }
-
-const { isAuthenticated, user } = useAuth0()
-
+findTcikets()
 </script>
 <template>
-    <v-container v-if="!isAuthenticated">
-        <p>You must be logged to use this subpage</p>
-        <Login onSubPage="true" @set-is-logged-in-parent="setIsLogged"></Login>
-    </v-container>
-    <v-container v-else>
+    <v-container>
         <p v-if="ticketsRef.length === 0">
             You have not any tickets
         </p>
