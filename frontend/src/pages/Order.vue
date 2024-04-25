@@ -13,7 +13,6 @@ const ageModel = defineModel('age')
 const dateIssueModel = defineModel('dateIssue')
 const companies = ref([])
 const companyRef = ref()
-const isLogged = ref(false)
 const oneWayRef = ref()
 const typeTicketRef = ref()
 const form = ref();
@@ -26,7 +25,7 @@ const setPropertiesOfMessage = (message, severity) => {
 
 const handleOrder = () => {
     if (companyRef.value && oneWayRef.value && typeTicketRef.value && ageModel.value && nameModel.value && endModel.value && startModel.value && surnameModel.value && dateIssueModel.value) {
-        const res = order(companyRef.value, oneWayRef.value, typeTicketRef.value, ageModel.value, nameModel.value, endModel.value, startModel.value, surnameModel.value, dateIssueModel.value)
+        const res = order(companyRef.value, oneWayRef.value, typeTicketRef.value, ageModel.value, nameModel.value, endModel.value, startModel.value, surnameModel.value, dateIssueModel.value, user.value.sub)
         setPropertiesOfMessage("adding", "info")
         form._value.reset()
     } else {
@@ -37,7 +36,7 @@ const handleOrder = () => {
 const findCompanies = async () => {
     companies.value = [];
     try {
-        const res = await fetch(`${import.meta.env.VITE_SERVER}/api/schedules/bus-stops`, {
+        const res = await fetch(`${import.meta.env.VITE_API_SERVER_URL}/api/schedules/bus-stops`, {
             method: "POST",
             headers: {
                 "Content-type": "application/json",

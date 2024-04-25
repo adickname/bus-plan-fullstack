@@ -7,7 +7,8 @@ export async function order(
   end,
   start,
   surname,
-  dateOfIssue
+  dateOfIssue,
+  sub
 ) {
   let minDistance = 0;
   let distance;
@@ -36,7 +37,9 @@ export async function order(
 
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_SERVER}/api/orders/prices?company=${company}`
+      `${
+        import.meta.env.VITE_API_SERVER_URL
+      }/api/orders/prices?company=${company}`
     );
     dataPrice = await res.json();
     let multiplierTypeTicket;
@@ -101,13 +104,13 @@ export async function order(
       }
 
       try {
-        await fetch(`${import.meta.env.VITE_SERVER}/api/orders/new`, {
+        await fetch(`${import.meta.env.VITE_API_SERVER_URL}/api/orders/new`, {
           method: "POST",
           headers: {
             "Content-type": "application/json",
           },
           body: JSON.stringify({
-            owner: sessionStorage.getItem("id"),
+            owner: sub,
             name: name,
             surname: surname,
             age: age,
