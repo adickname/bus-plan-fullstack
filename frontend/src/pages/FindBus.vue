@@ -15,7 +15,7 @@ const setPropertiesOfMessage = (message, severity) => {
 };
 const getCompanies = async () => {
     try {
-        const res = await fetch(`${import.meta.env.VITE_SERVER}/api/schedules/companies`);
+        const res = await fetch(`${import.meta.env.VITE_API_SERVER_URL}/api/schedules/companies`);
         const company = await res.json();
         companies.value = await company;
     } catch (error) {
@@ -108,7 +108,7 @@ const findScheduleAfterNameOfLine = () => {
     const end = endModel.value;
     const start = startModel.value;
     if (validatingData(endModel.value) && validatingData(startModel.value)) {
-        fetching(`${import.meta.env.VITE_SERVER}/api/schedules/bus-line`, end, start);
+        fetching(`${import.meta.env.VITE_API_SERVER_URL}/api/schedules/bus-line`, end, start);
     } else {
         setPropertiesOfMessage("not enough data", "info")
     }
@@ -119,18 +119,18 @@ const findBusLine = () => {
     const start = startModel.value;
     if (validatingData(endModel.value) && validatingData(startModel.value)) {
         fetching(
-            `${import.meta.env.VITE_SERVER}/api/schedules/bus-stops/filter-companies`,
+            `${import.meta.env.VITE_API_SERVER_URL}/api/schedules/bus-stops/filter-companies`,
             end,
             start
         );
     } else if (validatingData(end)) {
         fetching(
-            `${import.meta.env.VITE_SERVER}/api/schedules/bus-stops/filter-companies`,
+            `${import.meta.env.VITE_API_SERVER_URL}/api/schedules/bus-stops/filter-companies`,
             end
         );
     } else if (validatingData(start)) {
         fetching(
-            `${import.meta.env.VITE_SERVER}/api/schedules/bus-stops/filter-companies`,
+            `${import.meta.env.VITE_API_SERVER_URL}/api/schedules/bus-stops/filter-companies`,
             start
         );
     } else {
