@@ -3,7 +3,6 @@ import { useAuth0 } from '@auth0/auth0-vue'
 import { ref, defineModel } from "vue";
 import RadioButton from 'primevue/radiobutton';
 import Calendar from 'primevue/calendar';
-import Login from "./Login.vue"
 import { order } from "@/functions/order";
 const nameModel = defineModel('name')
 const surnameModel = defineModel('surname')
@@ -23,16 +22,26 @@ const setPropertiesOfMessage = (message, severity) => {
     emit("setSeverityRef", severity)
 };
 
+const resetInputs = () => {
+    dateIssueModel.value = ''
+    companies.value = ''
+    companyRef.value = ''
+    oneWayRef.value = ''
+    typeTicketRef.value = ''
+}
+
 const handleOrder = () => {
     if (companyRef.value && oneWayRef.value && typeTicketRef.value && ageModel.value && nameModel.value && endModel.value && startModel.value && surnameModel.value && dateIssueModel.value) {
         const res = order(companyRef.value, oneWayRef.value, typeTicketRef.value, ageModel.value, nameModel.value, endModel.value, startModel.value, surnameModel.value, dateIssueModel.value, user.value.sub)
         setPropertiesOfMessage("adding", "info")
         form._value.reset()
+        resetInputs()
     } else {
         setPropertiesOfMessage("not enough data", 'info')
     }
 
 }
+
 const findCompanies = async () => {
     companies.value = [];
     try {
@@ -57,20 +66,16 @@ const findCompanies = async () => {
         });
         sessionStorage.setItem("ticket-data", JSON.stringify(data));
     } catch (error) {
-        console.log(error.message);
+        setPropertiesOfMessage(error.message, "error")
     }
 }
 
-const { isAuthenticated, user } = useAuth0()
+const { user } = useAuth0()
 
 </script>
 <template>
     <v-form ref="form">
-        <v-container v-if="!isAuthenticated">
-            <p>You must be logged to use this subpage</p>
-            <Login onSubPage="true" @set-is-logged-in-parent="setIsLogged"></Login>
-        </v-container>
-        <v-container v-else>
+        <v-container>
             <v-row>
                 <v-col cols="12" md="4">
                     <v-text-field v-model="nameModel" label="Imie" hide-details required></v-text-field>
@@ -157,7 +162,7 @@ const { isAuthenticated, user } = useAuth0()
             </v-row>
             <v-row>
                 <v-col>
-                    <v-btn type="reset">
+                    <v-btn type="reset" @click="resetInputs()">
                         clear
                     </v-btn>
                     <v-btn @click="findCompanies()" v-if="companies.length === 0">
