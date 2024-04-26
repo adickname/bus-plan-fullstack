@@ -60,7 +60,7 @@ const uncheckAll = () => {
                 <v-col cols="12" md="4">
                     <Suspense>
                         <template #default>
-                            <AutoCompleteInput v-if="getBusStopsSuggestions" :suggests-destination="false">
+                            <AutoCompleteInput v-if="getBusStopsSuggestions" :suggests-destination="false" id="start">
                             </AutoCompleteInput>
                         </template>
                         <template #fallback>
@@ -69,7 +69,8 @@ const uncheckAll = () => {
                     </Suspense>
                     <Suspense>
                         <template #default>
-                            <AutoCompleteInput v-if="getBusStopsSuggestionsDestination" :suggests-destination="true">
+                            <AutoCompleteInput v-if="getBusStopsSuggestionsDestination" :suggests-destination="true"
+                                id="destination">
                             </AutoCompleteInput>
                         </template>
                         <template #fallback>
