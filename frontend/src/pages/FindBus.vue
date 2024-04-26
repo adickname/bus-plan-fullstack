@@ -16,13 +16,11 @@ const { findBusLine } = findBusStore;
 const isDataDownloaded = getIsDataDownloaded;
 const scheduleToPass = ref(getSchedule);
 const companies = ref([]);
-const endModel = defineModel("end");
-const startModel = defineModel("start");
 const companiesFilter = ref([]);
 const AutoCompleteInput = defineAsyncComponent(() =>
     import("@/components/AutoCompleteInput.vue")
 );
-/* import AutoCompleteInput from "@/components/AutoCompleteInput.vue"; */
+
 const emit = defineEmits([
     "setDisplayMessage",
     "setMessageRef",

@@ -118,7 +118,8 @@ router.post("/bus-stops/destination", async (req, res) => {
     if (place.length === 0) {
       res.send({ message: "cannot find. check your data" });
     }
-    res.status(200).json(place);
+
+    res.status(200).json(place.filter((place) => place != start));
   } catch (error) {
     res.send({ message: error.message });
   }

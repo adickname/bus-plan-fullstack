@@ -5,6 +5,15 @@ const setPropertiesOfMessage = (a, b) => {
   /*  console.log(""); */
 };
 export const useFindBusStore = defineStore("find bus functions", () => {
+  const startModel = ref();
+  const endModel = ref();
+  const changeStartModel = (value) => {
+    startModel.value = value;
+  };
+
+  const changeEndModel = (value) => {
+    endModel.value = value;
+  };
   const findBusLine = () => {
     const end = endModel.value;
     const start = startModel.value;
@@ -68,5 +77,7 @@ export const useFindBusStore = defineStore("find bus functions", () => {
   return {
     fetching,
     findBusLine,
+    changeStartModel,
+    changeEndModel,
   };
 });
