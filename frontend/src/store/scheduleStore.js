@@ -1,9 +1,6 @@
 import { defineStore } from "pinia";
-import { ref, computed, reactive } from "vue";
+import { ref, computed } from "vue";
 
-const setPropertiesOfMessage = (a, b) => {
-  /*  console.log(""); */
-};
 export const useScheduleStore = defineStore("autocomplete", () => {
   const busStopsSuggestions = ref([]);
   const busStopsSuggestionsDestination = ref([]);
@@ -21,6 +18,14 @@ export const useScheduleStore = defineStore("autocomplete", () => {
   const getBusStopsSuggestionsDestination = computed(() => {
     return busStopsSuggestionsDestination;
   });
+
+  const changeSchedule = (value) => {
+    schedule.value = value;
+  };
+
+  const changeIsDataDownloaded = (value) => {
+    isDataDownloaded.value = value;
+  };
   const distinctBusStops = async () => {
     const res = await fetch(
       `${import.meta.env.VITE_API_SERVER_URL}/api/schedules/bus-stops/distinct`,
@@ -60,5 +65,7 @@ export const useScheduleStore = defineStore("autocomplete", () => {
     getBusStopsSuggestionsDestination,
     distinctBusStops,
     changeBusStopsSuggestionsDestination,
+    changeIsDataDownloaded,
+    changeSchedule,
   };
 });

@@ -38,9 +38,11 @@ router.post("/bus-stops/filter-companies", async (req, res) => {
     if (req.body.end && req.body.start) {
       const { end, start, companies } = req.body;
       const schedule = await Schedule.find({
-        "places.place": { $regex: `${start.toLowerCase()}` },
-        "places.place": { $regex: `${end.toLowerCase()}` },
-        company: { $in: companies._value },
+        $and: [
+          { "places.place": { $regex: `${start.toLowerCase()}` } },
+          { "places.place": { $regex: `${end.toLowerCase()}` } },
+          { company: { $in: companies._value } },
+        ],
       });
       if (schedule.length === 0) {
         res.send({ message: "Cannot find. Check your data." });
@@ -58,7 +60,7 @@ router.post("/bus-stops/filter-companies", async (req, res) => {
       }
       res.status(200).json(schedule);
     } else if (req.body.start) {
-      const { start } = req.body;
+      const { start, companies } = req.body;
       const schedule = await Schedule.find({
         "places.place": { $regex: `${start.toLowerCase()}` },
         company: { $in: companies._value },

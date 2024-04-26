@@ -1,6 +1,5 @@
 <script setup>
 import { useCompaniesStore } from "@/store/companiesStore"
-import { watch } from "vue";
 import { ref } from "vue";
 const { getCompanies, checkAll, uncheckAll, getCompaniesRef, changeCompaniesFilter, getCompaniesFilter } = useCompaniesStore()
 const companies = ref(getCompaniesRef)

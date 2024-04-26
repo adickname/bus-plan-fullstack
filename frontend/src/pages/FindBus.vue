@@ -14,10 +14,7 @@ const {
     getBusStopsSuggestions,
     getBusStopsSuggestionsDestination,
 } = scheduleStore;
-const { findBusLine, changeCompaniesFilter } = findBusStore;
-const isDataDownloaded = getIsDataDownloaded;
-const scheduleToPass = ref(getSchedule);
-
+const { findBusLine } = findBusStore;
 const AutoCompleteInput = defineAsyncComponent(() =>
     import("@/components/AutoCompleteInput.vue")
 );
@@ -70,7 +67,7 @@ distinctBusStops();
             </v-row>
         </v-container>
     </v-form>
-    <template v-if="isDataDownloaded === true">
-        <Schedule :schedule="scheduleToPass"></Schedule>
+    <template v-if="getIsDataDownloaded === true">
+        <Schedule :schedule="getSchedule"></Schedule>
     </template>
 </template>

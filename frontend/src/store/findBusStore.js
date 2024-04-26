@@ -1,13 +1,17 @@
 import { defineStore } from "pinia";
 import { ref, computed, reactive } from "vue";
 import { validatingData } from "@/functions/validatingData";
+import { useCompaniesStore } from "@/store/companiesStore";
+import { useScheduleStore } from "./scheduleStore";
+const { getCompaniesFilter } = useCompaniesStore();
+const { changeIsDataDownloaded, changeSchedule } = useScheduleStore();
 const setPropertiesOfMessage = (a, b) => {
   /*  console.log(""); */
 };
 export const useFindBusStore = defineStore("find bus functions", () => {
   const startModel = ref();
   const endModel = ref();
-  const companiesFilter = ref([]);
+  const companiesFilter = ref(getCompaniesFilter);
   const changeStartModel = (value) => {
     startModel.value = value;
   };
@@ -55,7 +59,7 @@ export const useFindBusStore = defineStore("find bus functions", () => {
 
   const fetching = async (link, end, start, companiesFilter) => {
     if (companiesFilter._value.length > 0) {
-      isDataDownloaded.value = false;
+      changeIsDataDownloaded(false);
       try {
         const res = await fetch(link, {
           method: "POST",
@@ -65,13 +69,13 @@ export const useFindBusStore = defineStore("find bus functions", () => {
           body: JSON.stringify({
             end: end,
             start: start,
-            companies: companiesFilter._value,
+            companies: companiesFilter,
           }),
         });
         const data = await res.json();
-        schedule.value = [];
-        schedule.value.push(data);
-        isDataDownloaded.value = true;
+        changeSchedule([]);
+        changeSchedule([data]);
+        changeIsDataDownloaded(true);
       } catch (error) {
         setPropertiesOfMessage(error.message, "error");
       }
