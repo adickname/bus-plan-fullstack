@@ -2,16 +2,26 @@
 import { defineAsyncComponent, defineModel, ref, watch } from "vue";
 import Schedule from "../components/Schedule.vue";
 import { useScheduleStore } from "@/store/scheduleStore";
-const scheduleStore = useScheduleStore()
-const { getSchedule, getIsDataDownloaded, fetching, distinctBusStops, getBusStopsSuggestions } = scheduleStore;
-const isDataDownloaded = (getIsDataDownloaded)
+import { useFindBusStore } from "@/store/findBusStore";
+const scheduleStore = useScheduleStore();
+const findBusStore = useFindBusStore();
+const {
+    getSchedule,
+    getIsDataDownloaded,
+    distinctBusStops,
+    getBusStopsSuggestions,
+    getBusStopsSuggestionsDestination,
+} = scheduleStore;
+const { findBusLine } = findBusStore;
+const isDataDownloaded = getIsDataDownloaded;
 const scheduleToPass = ref(getSchedule);
 const companies = ref([]);
 const endModel = defineModel("end");
 const startModel = defineModel("start");
 const companiesFilter = ref([]);
-import { validatingData } from "@/functions/validatingData";
-const AutoCompleteInput = defineAsyncComponent(() => import("@/components/AutoCompleteInput.vue"))
+const AutoCompleteInput = defineAsyncComponent(() =>
+    import("@/components/AutoCompleteInput.vue")
+);
 /* import AutoCompleteInput from "@/components/AutoCompleteInput.vue"; */
 const emit = defineEmits([
     "setDisplayMessage",
@@ -34,7 +44,7 @@ const getCompanies = async () => {
         setPropertiesOfMessage(error.message, "error");
     }
 };
-distinctBusStops()
+distinctBusStops();
 getCompanies();
 
 const checkAll = () => {
@@ -44,44 +54,6 @@ const checkAll = () => {
 const uncheckAll = () => {
     companiesFilter.value = [];
 };
-
-
-const findBusLine = () => {
-    const end = endModel.value;
-    const start = startModel.value;
-    if (validatingData(endModel.value) && validatingData(startModel.value)) {
-        fetching(
-            `${import.meta.env.VITE_API_SERVER_URL
-            }/api/schedules/bus-stops/filter-companies`,
-            end,
-            start, companiesFilter
-        );
-    } else if (validatingData(end)) {
-        fetching(
-            `${import.meta.env.VITE_API_SERVER_URL
-            }/api/schedules/bus-stops/filter-companies`,
-            end, null, companiesFilter
-        );
-    } else if (validatingData(start)) {
-        fetching(
-            `${import.meta.env.VITE_API_SERVER_URL
-            }/api/schedules/bus-stops/filter-companies`, null,
-            start, companiesFilter
-        );
-    } else {
-        setPropertiesOfMessage("no data", "info");
-    }
-};
-
-const updateStartModel = (value) => {
-    startModel.value = value
-    console.log(value)
-}
-
-const updateEndModel = (value) => {
-    endModel.value = value
-}
-
 </script>
 <template>
     <v-form>
@@ -90,8 +62,7 @@ const updateEndModel = (value) => {
                 <v-col cols="12" md="4">
                     <Suspense>
                         <template #default>
-                            <AutoCompleteInput v-if="getBusStopsSuggestions" :suggests-destination="false"
-                                @update-state="updateStartModel()">
+                            <AutoCompleteInput v-if="getBusStopsSuggestions" :suggests-destination="false">
                             </AutoCompleteInput>
                         </template>
                         <template #fallback>
@@ -100,22 +71,13 @@ const updateEndModel = (value) => {
                     </Suspense>
                     <Suspense>
                         <template #default>
-                            <AutoCompleteInput v-if="getBusStopsSuggestions" :suggests-destination="true"
-                                @update-state="updateEndModel()">
+                            <AutoCompleteInput v-if="getBusStopsSuggestionsDestination" :suggests-destination="true">
                             </AutoCompleteInput>
                         </template>
                         <template #fallback>
                             <p>wait a minute</p>
                         </template>
                     </Suspense>
-                </v-col>
-                <v-col cols="12" md="4">
-                    <v-text-field v-model="startModel" label="start min 3 characters" hide-details
-                        required></v-text-field>
-                </v-col>
-                <v-col cols="12" md="4">
-                    <v-text-field v-model="endModel" :counter="10" label="destination min 3 characters" hide-details
-                        required></v-text-field>
                 </v-col>
                 <v-row>
                     <v-col cols="12" md="4">

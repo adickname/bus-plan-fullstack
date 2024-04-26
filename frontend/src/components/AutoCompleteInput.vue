@@ -21,7 +21,7 @@ const handleEmit = () => {
 
 <template>
     <v-autocomplete v-model="inputValue" label="Destinations" :items="getBusStopsSuggestionsDestination"
-        @update:modelValue="handleEmit" v-if="props.suggestsDestination"></v-autocomplete>
+        @update:modelValue="handleEmit()" v-if="props.suggestsDestination"></v-autocomplete>
     <v-autocomplete label="Start" v-model="inputValue" :items="getBusStopsSuggestions" v-else></v-autocomplete>
 
 </template>

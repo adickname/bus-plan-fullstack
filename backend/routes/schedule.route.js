@@ -96,4 +96,32 @@ router.post("/bus-stops", async (req, res) => {
   }
 });
 
+router.get("/bus-stops/distinct", async (req, res) => {
+  try {
+    const place = await Schedule.distinct("places.place");
+    if (place.length === 0) {
+      res.send({ message: "cannot find. check your data" });
+    }
+    res.status(200).json(place);
+  } catch (error) {
+    res.send({ message: error.message });
+  }
+});
+
+router.post("/bus-stops/destination", async (req, res) => {
+  try {
+    let { start } = req.body;
+    start = start.toLowerCase();
+    const place = await Schedule.distinct("places.place", {
+      "places.place": { $in: start },
+    });
+    if (place.length === 0) {
+      res.send({ message: "cannot find. check your data" });
+    }
+    res.status(200).json(place);
+  } catch (error) {
+    res.send({ message: error.message });
+  }
+});
+
 module.exports = router;
