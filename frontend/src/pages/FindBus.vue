@@ -1,15 +1,14 @@
 <script setup>
-import { defineModel, ref } from "vue";
+import { defineModel, ref, watch } from "vue";
 import Schedule from "../components/Schedule.vue";
 import { useScheduleStore } from "@/store/scheduleStore";
 const scheduleStore = useScheduleStore()
-const { getSchedule, getIsDataDownloaded, fetching, hej } = scheduleStore;
-hej()
+const { getSchedule, getIsDataDownloaded, fetching } = scheduleStore;
+const isDataDownloaded = (getIsDataDownloaded)
 const scheduleToPass = ref(getSchedule);
-const companies = ref(getIsDataDownloaded);
+const companies = ref([]);
 const endModel = defineModel("end");
 const startModel = defineModel("start");
-const isDataDownloaded = ref(false);
 const companiesFilter = ref([]);
 import { validatingData } from "@/functions/validatingData";
 const emit = defineEmits([
@@ -43,19 +42,6 @@ const uncheckAll = () => {
     companiesFilter.value = [];
 };
 
-const findScheduleAfterNameOfLine = () => {
-    const end = endModel.value;
-    const start = startModel.value;
-    if (validatingData(endModel.value) && validatingData(startModel.value)) {
-        fetching(
-            `${import.meta.env.VITE_API_SERVER_URL}/api/schedules/bus-line`,
-            end,
-            start, companiesFilter.value
-        );
-    } else {
-        setPropertiesOfMessage("not enough data", "info");
-    }
-};
 
 const findBusLine = () => {
     const end = endModel.value;
@@ -65,19 +51,19 @@ const findBusLine = () => {
             `${import.meta.env.VITE_API_SERVER_URL
             }/api/schedules/bus-stops/filter-companies`,
             end,
-            start, companiesFilter.value
+            start, companiesFilter
         );
     } else if (validatingData(end)) {
         fetching(
             `${import.meta.env.VITE_API_SERVER_URL
             }/api/schedules/bus-stops/filter-companies`,
-            end, companiesFilter.value
+            end, null, companiesFilter
         );
     } else if (validatingData(start)) {
         fetching(
             `${import.meta.env.VITE_API_SERVER_URL
-            }/api/schedules/bus-stops/filter-companies`,
-            start, companiesFilter.value
+            }/api/schedules/bus-stops/filter-companies`, null,
+            start, companiesFilter
         );
     } else {
         setPropertiesOfMessage("no data", "info");
@@ -111,15 +97,13 @@ const findBusLine = () => {
                 </v-row>
             </v-row>
             <v-row>
-                <v-btn @click="findScheduleAfterNameOfLine()" class="my-2 mx-2">
-                    find with bus line
-                </v-btn>
                 <v-btn @click="findBusLine()" class="my-2 mx-2">
                     find with bus stops
                 </v-btn>
             </v-row>
         </v-container>
     </v-form>
+    {{ isDataDownloaded }}
     <template v-if="isDataDownloaded === true">
         <Schedule :schedule="scheduleToPass"></Schedule>
     </template>
