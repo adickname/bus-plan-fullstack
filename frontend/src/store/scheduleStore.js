@@ -1,19 +1,12 @@
 import { defineStore } from "pinia";
 import { ref, computed, reactive } from "vue";
-/* const emit = defineEmits([
-  "setDisplayMessage",
-  "setMessageRef",
-  "setSeverityRef",
-]);
-const setPropertiesOfMessage = (message, severity) => {
-  emit("setDisplayMessage", true);
-  emit("setMessageRef", message);
-  emit("setSeverityRef", severity);
-}; */
+
 const setPropertiesOfMessage = (a, b) => {
   /*  console.log(""); */
 };
 export const useScheduleStore = defineStore("schedule", () => {
+  const busStopsSuggestions = ref([]);
+  const busStopsSuggestionsDestination = ref([]);
   const schedule = ref([]);
   const isDataDownloaded = ref(false);
   const getSchedule = computed(() => {
@@ -22,7 +15,45 @@ export const useScheduleStore = defineStore("schedule", () => {
   const getIsDataDownloaded = computed(() => {
     return isDataDownloaded;
   });
-  async function fetching(link, end, start, companiesFilter) {
+  const getBusStopsSuggestions = computed(() => {
+    return busStopsSuggestions;
+  });
+  const getBusStopsSuggestionsDestination = computed(() => {
+    return busStopsSuggestionsDestination;
+  });
+  const distinctBusStops = async () => {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_SERVER_URL}/api/schedules/bus-stops/distinct`,
+      {
+        headers: {
+          "Content-type": "application/json",
+        },
+      }
+    );
+    let data = await res.json();
+    busStopsSuggestions.value = [];
+    busStopsSuggestions.value = data;
+  };
+
+  const changeBusStopsSuggestionsDestination = async (start) => {
+    const res = await fetch(
+      `${
+        import.meta.env.VITE_API_SERVER_URL
+      }/api/schedules/bus-stops/destination`,
+      {
+        method: "POST",
+        body: JSON.stringify({ start: start }),
+        headers: {
+          "Content-type": "application/json",
+        },
+      }
+    );
+    let data = await res.json();
+    busStopsSuggestionsDestination.value = [];
+    busStopsSuggestionsDestination.value = data;
+  };
+
+  const fetching = async (link, end, start, companiesFilter) => {
     if (companiesFilter._value.length > 0) {
       isDataDownloaded.value = false;
       try {
@@ -45,10 +76,14 @@ export const useScheduleStore = defineStore("schedule", () => {
         setPropertiesOfMessage(error.message, "error");
       }
     }
-  }
+  };
   return {
     getSchedule,
     getIsDataDownloaded,
     fetching,
+    getBusStopsSuggestions,
+    getBusStopsSuggestionsDestination,
+    distinctBusStops,
+    changeBusStopsSuggestionsDestination,
   };
 });

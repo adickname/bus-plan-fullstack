@@ -1,19 +1,27 @@
 <script setup>
-import AutoComplete from 'primevue/autocomplete';
-const props = defineProps(['suggestions'])
+import { useScheduleStore } from "@/store/scheduleStore";
+import { watch } from "vue";
+const scheduleStore = useScheduleStore()
+const { getBusStopsSuggestions,
+    getBusStopsSuggestionsDestination, changeBusStopsSuggestionsDestination } = scheduleStore;
+const props = defineProps(['suggestsDestination'])
 const emit = defineEmits(['updateState'])
 const inputValue = defineModel('inputValue')
 const handleEmit = () => {
-    emit('update-state', inputValue.value)
+    console.log(inputValue.value)
+    emit('updateState', inputValue.value)
 }
+/* watch(inputValue, (newValue) => {
+    handleEmit()
+    if (props.suggestsDestination) {
+        changeBusStopsSuggestionsDestination(inputValue)
+    }
+}) */
 </script>
 
 <template>
-    <AutoComplete v-model="inputValue" :suggestions="props.suggestions" @change="handleEmit()">
-        <template #option="slotProps">
-            <div class="flex align-options-center">
-                <div>{{ slotProps.option.name }}</div>
-            </div>
-        </template>
-    </AutoComplete>
+    <v-autocomplete v-model="inputValue" label="Destinations" :items="getBusStopsSuggestionsDestination"
+        @update:modelValue="handleEmit" v-if="props.suggestsDestination"></v-autocomplete>
+    <v-autocomplete label="Start" v-model="inputValue" :items="getBusStopsSuggestions" v-else></v-autocomplete>
+
 </template>

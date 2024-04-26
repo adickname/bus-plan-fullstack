@@ -1,9 +1,9 @@
 <script setup>
-import { defineModel, ref, watch } from "vue";
+import { defineAsyncComponent, defineModel, ref, watch } from "vue";
 import Schedule from "../components/Schedule.vue";
 import { useScheduleStore } from "@/store/scheduleStore";
 const scheduleStore = useScheduleStore()
-const { getSchedule, getIsDataDownloaded, fetching } = scheduleStore;
+const { getSchedule, getIsDataDownloaded, fetching, distinctBusStops, getBusStopsSuggestions } = scheduleStore;
 const isDataDownloaded = (getIsDataDownloaded)
 const scheduleToPass = ref(getSchedule);
 const companies = ref([]);
@@ -11,6 +11,8 @@ const endModel = defineModel("end");
 const startModel = defineModel("start");
 const companiesFilter = ref([]);
 import { validatingData } from "@/functions/validatingData";
+const AutoCompleteInput = defineAsyncComponent(() => import("@/components/AutoCompleteInput.vue"))
+/* import AutoCompleteInput from "@/components/AutoCompleteInput.vue"; */
 const emit = defineEmits([
     "setDisplayMessage",
     "setMessageRef",
@@ -32,6 +34,7 @@ const getCompanies = async () => {
         setPropertiesOfMessage(error.message, "error");
     }
 };
+distinctBusStops()
 getCompanies();
 
 const checkAll = () => {
@@ -69,11 +72,43 @@ const findBusLine = () => {
         setPropertiesOfMessage("no data", "info");
     }
 };
+
+const updateStartModel = (value) => {
+    startModel.value = value
+    console.log(value)
+}
+
+const updateEndModel = (value) => {
+    endModel.value = value
+}
+
 </script>
 <template>
     <v-form>
         <v-container>
             <v-row>
+                <v-col cols="12" md="4">
+                    <Suspense>
+                        <template #default>
+                            <AutoCompleteInput v-if="getBusStopsSuggestions" :suggests-destination="false"
+                                @update-state="updateStartModel()">
+                            </AutoCompleteInput>
+                        </template>
+                        <template #fallback>
+                            <p>wait a minute</p>
+                        </template>
+                    </Suspense>
+                    <Suspense>
+                        <template #default>
+                            <AutoCompleteInput v-if="getBusStopsSuggestions" :suggests-destination="true"
+                                @update-state="updateEndModel()">
+                            </AutoCompleteInput>
+                        </template>
+                        <template #fallback>
+                            <p>wait a minute</p>
+                        </template>
+                    </Suspense>
+                </v-col>
                 <v-col cols="12" md="4">
                     <v-text-field v-model="startModel" label="start min 3 characters" hide-details
                         required></v-text-field>
@@ -103,7 +138,6 @@ const findBusLine = () => {
             </v-row>
         </v-container>
     </v-form>
-    {{ isDataDownloaded }}
     <template v-if="isDataDownloaded === true">
         <Schedule :schedule="scheduleToPass"></Schedule>
     </template>
