@@ -34,15 +34,6 @@ export const useFindBusStore = defineStore("find bus functions", () => {
         start,
         companiesFilter
       );
-    } else if (validatingData(end)) {
-      fetching(
-        `${
-          import.meta.env.VITE_API_SERVER_URL
-        }/api/schedules/bus-stops/filter-companies`,
-        end,
-        null,
-        companiesFilter
-      );
     } else if (validatingData(start)) {
       fetching(
         `${

@@ -2,27 +2,13 @@ const express = require("express");
 const router = express.Router();
 const Schedule = require("../models/schedule.model.js");
 
-router.post("/bus-line", async (req, res) => {
-  try {
-    if (req.body.end && req.body.start) {
-      const { end, start, companies } = req.body;
-      const schedule = await Schedule.find({
-        end: end.toLowerCase(),
-        start: start.toLowerCase(),
-        company: { $in: companies._value },
-      });
-      if (schedule.length === 0) {
-        res.json({ message: "Cannot find. Check your data." });
-      } else {
-        res.status(200).json(schedule);
-      }
-    } else {
-      res.json({ message: "No enough data" });
-    }
-  } catch (error) {
-    res.send({ message: error.message });
+const returnData = (data, res) => {
+  if (data.length === 0) {
+    res.send({ message: "Cannot find. Check your data." });
+  } else {
+    res.status(200).json(data);
   }
-});
+};
 
 router.get("/companies", async (req, res) => {
   try {
@@ -44,31 +30,14 @@ router.post("/bus-stops/filter-companies", async (req, res) => {
           { company: { $in: companies._value } },
         ],
       });
-      if (schedule.length === 0) {
-        res.send({ message: "Cannot find. Check your data." });
-      } else {
-        res.status(200).json(schedule);
-      }
-    } else if (req.body.end) {
-      const { end, companies } = req.body;
-      const schedule = await Schedule.find({
-        "places.place": { $regex: `${end.toLowerCase()}` },
-        company: { $in: companies._value },
-      });
-      if (schedule.length === 0) {
-        res.send({ message: "Cannot find. Check your data." });
-      }
-      res.status(200).json(schedule);
+      returnData(schedule, res);
     } else if (req.body.start) {
       const { start, companies } = req.body;
       const schedule = await Schedule.find({
         "places.place": { $regex: `${start.toLowerCase()}` },
         company: { $in: companies._value },
       });
-      if (schedule.length === 0) {
-        res.send({ message: "Cannot find. Check your data." });
-      }
-      res.status(200).json(schedule);
+      returnData(schedule, res);
     } else {
       res.send({ message: "Cannot find. Check your data." });
     }
@@ -87,11 +56,7 @@ router.post("/bus-stops", async (req, res) => {
           { "places.place": { $in: end.toLowerCase() } },
         ],
       });
-      if (schedule.length === 0) {
-        res.send({ message: "Cannot find. Check your data." });
-      } else {
-        res.status(200).json(schedule);
-      }
+      returnData(schedule, res);
     }
   } catch (error) {
     res.send({ message: error.message });
@@ -101,10 +66,7 @@ router.post("/bus-stops", async (req, res) => {
 router.get("/bus-stops/distinct", async (req, res) => {
   try {
     const place = await Schedule.distinct("places.place");
-    if (place.length === 0) {
-      res.send({ message: "cannot find. check your data" });
-    }
-    res.status(200).json(place);
+    returnData(place, res);
   } catch (error) {
     res.send({ message: error.message });
   }
@@ -117,11 +79,10 @@ router.post("/bus-stops/destination", async (req, res) => {
     const place = await Schedule.distinct("places.place", {
       "places.place": { $in: start },
     });
-    if (place.length === 0) {
-      res.send({ message: "cannot find. check your data" });
-    }
-
-    res.status(200).json(place.filter((place) => place != start));
+    returnData(
+      place.filter((place) => place != start),
+      res
+    );
   } catch (error) {
     res.send({ message: error.message });
   }
