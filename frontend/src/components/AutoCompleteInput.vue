@@ -23,6 +23,7 @@ watch(inputValue, (newValue) => {
         changeStartModel(newValue)
     }
 })
+
 </script>
 
 <template>

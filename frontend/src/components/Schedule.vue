@@ -5,8 +5,11 @@ const props = defineProps(['schedule'])
 </script>
 
 <template>
-    <template v-for="row in props.schedule[0]" v-if="!props.schedule.message">
-        <Card style="margin: 10px;">
+    <template v-if="props.schedule[0].message">
+        {{ props.schedule[0].message }}
+    </template>
+    <template v-for="row in props.schedule[0]" v-else>
+        <Card :pt="{ root: { class: 'm-2' } }">
             <template #title>{{ row.start }}---{{ row.end }}</template>
             <template #subtitle>{{ row.company }}</template>
             <template #content>
@@ -16,7 +19,4 @@ const props = defineProps(['schedule'])
             </template>
         </Card>
     </template>
-    <p v-else>
-        {{ props.schedule.message }}
-    </p>
 </template>
