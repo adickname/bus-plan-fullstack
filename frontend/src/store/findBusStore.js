@@ -12,6 +12,12 @@ export const useFindBusStore = defineStore("find bus functions", () => {
   const startModel = ref();
   const endModel = ref();
   const companiesFilter = ref(getCompaniesFilter);
+  const getStart = computed(() => {
+    return startModel;
+  });
+  const getDestination = computed(() => {
+    return endModel;
+  });
   const changeStartModel = (value) => {
     startModel.value = value;
   };
@@ -79,5 +85,7 @@ export const useFindBusStore = defineStore("find bus functions", () => {
     changeStartModel,
     changeEndModel,
     changeCompaniesFilter,
+    getStart,
+    getDestination,
   };
 });

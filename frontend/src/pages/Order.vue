@@ -4,10 +4,15 @@ import { ref, defineModel } from "vue";
 import RadioButton from 'primevue/radiobutton';
 import Calendar from 'primevue/calendar';
 import { order } from "@/functions/order";
+import StartDestinationInputs from '@/components/StartDestinationInputs.vue';
+import { useFindBusStore } from "@/store/findBusStore";
+const findBusStore = useFindBusStore();
+const { getStart,
+    getDestination } = findBusStore
 const nameModel = defineModel('name')
 const surnameModel = defineModel('surname')
-const endModel = defineModel('end')
-const startModel = defineModel('start')
+const endModel = ref(getDestination)
+const startModel = ref(getStart)
 const ageModel = defineModel('age')
 const dateIssueModel = defineModel('dateIssue')
 const companies = ref([])
@@ -31,8 +36,9 @@ const resetInputs = () => {
 }
 
 const handleOrder = () => {
-    if (companyRef.value && oneWayRef.value && typeTicketRef.value && ageModel.value && nameModel.value && endModel.value && startModel.value && surnameModel.value && dateIssueModel.value) {
-        const res = order(companyRef.value, oneWayRef.value, typeTicketRef.value, ageModel.value, nameModel.value, endModel.value, startModel.value, surnameModel.value, dateIssueModel.value, user.value.sub)
+    console.log(getDestination)
+    if (companyRef.value && oneWayRef.value && typeTicketRef.value && ageModel.value && nameModel.value && getDestination.value && getStart.value && surnameModel.value && dateIssueModel.value) {
+        const res = order(companyRef.value, oneWayRef.value, typeTicketRef.value, ageModel.value, nameModel.value, getDestination.value, getStart.value, surnameModel.value, dateIssueModel.value, user.value.sub)
         setPropertiesOfMessage("adding", "info")
         form._value.reset()
         resetInputs()
@@ -44,13 +50,14 @@ const handleOrder = () => {
 
 const findCompanies = async () => {
     companies.value = [];
+    console.log(getStart.value)
     try {
         const res = await fetch(`${import.meta.env.VITE_API_SERVER_URL}/api/schedules/bus-stops`, {
             method: "POST",
             headers: {
                 "Content-type": "application/json",
             },
-            body: JSON.stringify({ end: endModel.value, start: startModel.value }),
+            body: JSON.stringify({ end: getDestination.value, start: getStart.value }),
         });
         const data = await res.json();
         data.forEach((element) => {
@@ -64,7 +71,6 @@ const findCompanies = async () => {
                 companies.value.push(element.company);
             }
         });
-        sessionStorage.setItem("ticket-data", JSON.stringify(data));
     } catch (error) {
         setPropertiesOfMessage(error.message, "error")
     }
@@ -86,12 +92,7 @@ const { user } = useAuth0()
                 <v-col cols="12" md="4">
                     <v-text-field v-model="ageModel" label="Wiek" hide-details required></v-text-field>
                 </v-col>
-                <v-col cols="12" md="4">
-                    <v-text-field v-model="startModel" label="Początek trasy" hide-details required></v-text-field>
-                </v-col>
-                <v-col cols="12" md="4">
-                    <v-text-field v-model="endModel" label="koniec trasy" hide-details required></v-text-field>
-                </v-col>
+                <StartDestinationInputs></StartDestinationInputs>
             </v-row>
             <v-row>
                 <v-col cols="12" md="4">
