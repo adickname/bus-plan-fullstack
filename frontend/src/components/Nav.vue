@@ -23,13 +23,16 @@ const items = ref([{
 
 <template>
 
-    <MegaMenu :model="items" breakpoint="1023px" class=" animate-puff-in-center"
-        :pt="{ root: { class: 'flex justify-between p-4 bg-[#485262]' }, menu: { class: 'max-lg:bg-red-400 grow' }, menubutton: { class: 'bg-red-400' }, menuitem: { class: 'flex-1 h-16 hover:bg-red-500 bg-red-400 flex items-center justify-left md:justify-center cursor-pointer mx-6 rounded-lg' } }">
+    <MegaMenu :model="items" breakpoint="1023px" class=" "
+        :pt="{ root: { class: 'flex justify-between p-4 bg-[#485262] ' }, menu: { class: '' }, menubutton: { class: 'bg-red-400' }, }">
         <template #start>
             <h2 class=" font-greatvibes font-light text-[2rem] text-red-400">bus plan</h2>
         </template>
         <template #item="{ item }">
-            <router-link :to="{ name: item.route }"><span>{{ item.label }}</span></router-link>
+            <router-link :to="{ name: item.route }"
+                class="flex-1 hover:bg-red-500 bg-red-400 flex items-center justify-left lg:justify-center cursor-pointer p-4 lg:w-40 lg:rounded-lg h-10 lg:m-2 animate-jelloHorizontal lg:animate-puff-in">
+                <span>{{ item.label }}</span>
+            </router-link>
         </template>
     </MegaMenu>
 
