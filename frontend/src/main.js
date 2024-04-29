@@ -4,6 +4,7 @@ import { createPinia } from "pinia";
 import { createAuth0 } from "@auth0/auth0-vue";
 import "primevue/resources/themes/lara-dark-indigo/theme.css";
 import "tailwindcss/tailwind.css";
+
 import App from "./App.vue";
 
 import "vuetify/styles";
