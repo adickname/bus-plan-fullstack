@@ -61,3 +61,4 @@ npm run dev
 ```sh
 npm run build
 ```
+Unfortunately waiting for response of the first request is very long
