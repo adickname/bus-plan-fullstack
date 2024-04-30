@@ -161,7 +161,7 @@ const findCompanies = async () => {
             </v-row>
             <v-row>
                 <v-col>
-                    <v-btn type="reset" @click="resetInputs()">
+                    <v-btn type="reset" @click="resetInputs()" class="mx-2">
                         clear
                     </v-btn>
                     <v-btn @click="findCompanies()" v-if="companies.length === 0">
