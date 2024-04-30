@@ -13,7 +13,7 @@ getCompanies()
     <v-row>
         <v-col cols="12" md="4">
             <template v-for="company in companies">
-                <div>
+                <div class="mx-4">
                     <input v-model="companiesFilter" type="checkbox" name="company" :value="company" :id="company" />
                     <label :for="company">{{ company }}</label>
                 </div>
