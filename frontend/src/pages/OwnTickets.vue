@@ -38,9 +38,10 @@ findTcikets()
         <p v-if="ticketsRef.length === 0">
             You have not any tickets
         </p>
-        <v-row>
-            <v-col cols="12" md="4" v-for="ticket in ticketsRef">
-                <Card class="ticket">
+        <div class="flex flex-wrap justify-center md:justify-between md:m-6 md:text-lg">
+            <div class="m-4" v-for="ticket in ticketsRef">
+                <Card class="ticket"
+                    :pt="{ root: { class: 'p-2 px-4' }, body: { class: 'flex flex-col' }, caption: { class: 'flex justify-center' } }">
                     <template #title>{{ ticket.company }}</template>
                     <template #content>
                         <p>
@@ -62,7 +63,7 @@ findTcikets()
                         <p v-else>two ways</p>
                     </template>
                 </Card>
-            </v-col>
-        </v-row>
+            </div>
+        </div>
     </v-container>
 </template>
