@@ -3,7 +3,7 @@ import { useAuth0 } from '@auth0/auth0-vue'
 import { ref, defineModel } from "vue";
 import RadioButton from 'primevue/radiobutton';
 import Calendar from 'primevue/calendar';
-import { order } from "@/functions/order";
+import { order } from '@/functions/order';
 import StartDestinationInputs from '@/components/StartDestinationInputs.vue';
 import { useFindBusStore } from "@/store/findBusStore";
 const findBusStore = useFindBusStore();
@@ -21,11 +21,8 @@ const oneWayRef = ref()
 const typeTicketRef = ref()
 const form = ref();
 const emit = defineEmits(["setDisplayMessage", "setMessageRef", "setSeverityRef"]);
-const setPropertiesOfMessage = (message, severity) => {
-    emit("setDisplayMessage", true)
-    emit("setMessageRef", message)
-    emit("setSeverityRef", severity)
-};
+
+const { user } = useAuth0()
 
 const resetInputs = () => {
     dateIssueModel.value = ''
@@ -35,15 +32,16 @@ const resetInputs = () => {
     typeTicketRef.value = ''
 }
 
-const handleOrder = () => {
-    console.log(getDestination)
+
+
+const handleOrder = async () => {
     if (companyRef.value && oneWayRef.value && typeTicketRef.value && ageModel.value && nameModel.value && getDestination.value && getStart.value && surnameModel.value && dateIssueModel.value) {
         const res = order(companyRef.value, oneWayRef.value, typeTicketRef.value, ageModel.value, nameModel.value, getDestination.value, getStart.value, surnameModel.value, dateIssueModel.value, user.value.sub)
-        setPropertiesOfMessage("adding", "info")
+
         form._value.reset()
         resetInputs()
     } else {
-        setPropertiesOfMessage("not enough data", 'info')
+
     }
 
 }
@@ -76,7 +74,7 @@ const findCompanies = async () => {
     }
 }
 
-const { user } = useAuth0()
+
 
 </script>
 <template>
@@ -169,7 +167,7 @@ const { user } = useAuth0()
                     <v-btn @click="findCompanies()" v-if="companies.length === 0">
                         Find companies
                     </v-btn>
-                    <v-btn @click="handleOrder()" v-else-if="companies.length > 0">
+                    <v-btn @click="handleOrder" v-else-if="companies.length > 0">
                         order
                     </v-btn>
                 </v-col>

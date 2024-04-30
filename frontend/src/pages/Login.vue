@@ -64,5 +64,4 @@ if (isAuthenticated.value === true) {
             </v-row>
         </v-container>
     </v-form>
-    <div v-if="isAuthenticated">{{ user }}</div>
 </template>

@@ -24,6 +24,6 @@ const setDisplayMessage = (value) => {
     <RouterView @set-severity-ref="handleSeverity" @set-display-message="setDisplayMessage"
         @set-message-ref="handleMessage">
     </RouterView>
-    <Comunicat :severity="severity" :message="message" v-if="displayMessage" @set-display-message="setDisplayMessage">
-    </Comunicat>
+    <!--   <Comunicat :severity="severity" :message="message" v-if="displayMessage" @set-display-message="setDisplayMessage">
+    </Comunicat> -->
 </template>

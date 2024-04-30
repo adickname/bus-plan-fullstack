@@ -1,4 +1,4 @@
-export async function order(
+export const order = async (
   company,
   oneWay,
   typeTicket,
@@ -9,13 +9,24 @@ export async function order(
   surname,
   dateOfIssue,
   sub
-) {
+) => {
   let minDistance = 0;
   let distance;
   let dataPrice;
   let dateOfExpiry;
   let reducedPrice;
-
+  console.log(
+    company,
+    oneWay,
+    typeTicket,
+    age,
+    name,
+    end,
+    start,
+    surname,
+    dateOfIssue,
+    sub
+  );
   if (typeTicket === "day") {
     dateOfIssue = `${dateOfIssue.getFullYear()}-${(dateOfIssue.getMonth() + 1)
       .toString()
@@ -68,13 +79,7 @@ export async function order(
       multiplierTypeTicket /= 100;
       multiplierTypeTicket *= 51;
     }
-    const ticketData = JSON.parse(sessionStorage.getItem("ticket-data"));
     const dataWithCompanyFilter = [];
-    ticketData.forEach((element) => {
-      if (element.company === company) {
-        dataWithCompanyFilter.push(element);
-      }
-    });
     dataWithCompanyFilter.forEach((element) => {
       element.places
         .slice()
@@ -96,6 +101,7 @@ export async function order(
       }
     });
     try {
+      console.log(99);
       if (age < 18) {
         reducedPrice =
           ((minDistance * multiplierTypeTicket) / 100) * 49 * multiplierOneWay;
@@ -104,6 +110,7 @@ export async function order(
       }
 
       try {
+        console.log(88);
         await fetch(`${import.meta.env.VITE_API_SERVER_URL}/api/orders/new`, {
           method: "POST",
           headers: {
@@ -143,4 +150,4 @@ export async function order(
   } catch (error) {
     return error.message;
   }
-}
+};

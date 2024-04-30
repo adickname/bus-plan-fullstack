@@ -23,8 +23,8 @@ const items = ref([{
 
 <template>
 
-    <MegaMenu :model="items" breakpoint="1023px" class=" "
-        :pt="{ root: { class: 'flex justify-between p-4 bg-[#485262] ' }, menu: { class: '' }, menubutton: { class: 'bg-red-400' }, }">
+    <MegaMenu :model="items" breakpoint="1023px"
+        :pt="{ root: { class: 'flex justify-between p-4 bg-[#485262] ' }, menubutton: { class: 'bg-red-400' }, }">
         <template #start>
             <h2 class=" font-greatvibes font-light text-[2rem] text-red-400">bus plan</h2>
         </template>
