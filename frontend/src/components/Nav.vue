@@ -30,7 +30,7 @@ const items = ref([{
         </template>
         <template #item="{ item }">
             <router-link :to="{ name: item.route }"
-                class="flex-1 hover:bg-red-500 bg-red-400 flex items-center justify-left lg:justify-center cursor-pointer p-4 lg:w-40 lg:rounded-lg h-10 lg:m-2 animate-jelloHorizontal lg:animate-puff-in">
+                class="flex-1 hover:bg-red-500 bg-red-400 flex items-center justify-left lg:justify-center cursor-pointer p-4 lg:w-40 lg:rounded-lg h-10 lg:m-2">
                 <span>{{ item.label }}</span>
             </router-link>
         </template>
