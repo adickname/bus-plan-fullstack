@@ -11,8 +11,6 @@ watch(dateOfIssue, (newValue) => {
 </script>
 
 <template>
-    hej
-    {{ getTypeTicket }}
     <template v-if="getTypeTicket">
         <v-col cols="12" md="4">
             <p>Begin:</p>

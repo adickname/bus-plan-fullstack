@@ -8,7 +8,6 @@ const surname = defineModel('surname')
 const age = defineModel('age')
 
 watch(name, (newValue) => {
-    console.log(newValue)
     changeName(newValue)
 })
 

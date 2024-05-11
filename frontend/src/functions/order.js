@@ -1,5 +1,6 @@
 import { useOrderStore } from "@/store/orderStore.js";
 import { useFindBusStore } from "@/store/findBusStore";
+import { useMessageStore } from "@/store/messageStore";
 const findBusStore = useFindBusStore();
 const { getStart, getDestination } = findBusStore;
 const orderStore = useOrderStore();
@@ -12,8 +13,9 @@ let {
   getCompany,
   getTypeTicket,
 } = orderStore;
+const messageStore = useMessageStore();
+const { changeMessage, changeSeverity, changeShouldBeDisplayed } = messageStore;
 export const order = async (sub) => {
-  console.log(getName.value, getCompany.value);
   let minDistance = 0;
   let distance;
   let dataPrice;
@@ -55,7 +57,6 @@ export const order = async (sub) => {
         multipliergetOneWay = 2;
       }
     }
-    console.log(getTypeTicket.value);
     if (getTypeTicket.value) {
       switch (getTypeTicket.value) {
         case "day":
@@ -95,7 +96,6 @@ export const order = async (sub) => {
       }
     });
     try {
-      console.log("age");
       if (getAge.value < 18) {
         reducedPrice =
           ((minDistance * multiplierTypeTicket) / 100) *
@@ -104,54 +104,42 @@ export const order = async (sub) => {
       } else {
         reducedPrice = 0;
       }
-      console.log(
-        sub,
-        getName.value,
-        getSurname.value,
-        getAge.value,
-        getCompany.value,
-        minDistance,
-        getDestination.value,
-        getStart.value,
-        minDistance * multiplierTypeTicket * multipliergetOneWay,
-        dateIssue,
-        reducedPrice.toFixed(),
-        reducedPrice.toFixed(),
-        `${dateOfExpiry}`,
-        getTypeTicket.value,
-        getOneWay.value
-      );
       try {
-        console.log("order");
-        await fetch(`${import.meta.env.VITE_API_SERVER_URL}/api/orders/new`, {
-          method: "POST",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify({
-            owner: sub,
-            name: getName.value,
-            surname: getSurname.value,
-            age: getAge.value,
-            company: getCompany.value,
-            distance: minDistance,
-            end: getDestination.value,
-            start: getStart.value,
-            fakePrice: (
-              minDistance *
-              multiplierTypeTicket *
-              multipliergetOneWay
-            ).toFixed(),
-            reducedPrice: reducedPrice.toFixed(),
-            dateOfIssue: dateIssue,
-            dateOfExpiry: `${dateOfExpiry}`,
-            typeTicket: getTypeTicket.value,
-            oneWay: getOneWay.value,
-          }),
-        });
+        const res = await fetch(
+          `${import.meta.env.VITE_API_SERVER_URL}/api/orders/new`,
+          {
+            method: "POST",
+            headers: {
+              "Content-type": "application/json",
+            },
+            body: JSON.stringify({
+              owner: sub,
+              name: getName.value,
+              surname: getSurname.value,
+              age: getAge.value,
+              company: getCompany.value,
+              distance: minDistance,
+              end: getDestination.value,
+              start: getStart.value,
+              fakePrice: (
+                minDistance *
+                multiplierTypeTicket *
+                multipliergetOneWay
+              ).toFixed(),
+              reducedPrice: reducedPrice.toFixed(),
+              dateOfIssue: dateIssue,
+              dateOfExpiry: `${dateOfExpiry}`,
+              typeTicket: getTypeTicket.value,
+              oneWay: getOneWay.value,
+            }),
+          }
+        );
         const dataRes = await res.json();
         if (dataRes.message) {
-          return "added succesfully";
+          console.log(66);
+          changeMessage("added succesfully");
+          changeSeverity("info");
+          changeShouldBeDisplayed(true);
         }
       } catch (error) {
         return error.message;
