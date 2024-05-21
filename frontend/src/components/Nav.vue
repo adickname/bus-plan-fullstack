@@ -3,28 +3,28 @@ import { useAuth0 } from "@auth0/auth0-vue";
 import { RouterLink } from "vue-router";
 import { ref } from "vue";
 import MegaMenu from "primevue/megamenu";
+import { useI18n } from "vue-i18n";
 const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
-console.log(window.location);
 const windowLocation = ref(window.location.pathname);
-console.log(windowLocation.value);
+const { t } = useI18n();
 const items = ref([
   {
-    label: "Home",
+    label: t("nav.home"),
     route: "home",
     concernsAuth: false,
   },
   {
-    label: "find bus",
+    label: t("nav.findBus"),
     route: "find",
     concernsAuth: false,
   },
   {
-    label: "Order",
+    label: t("nav.order"),
     route: "order",
     concernsAuth: false,
   },
   {
-    label: "Own tickets",
+    label: t("nav.ownTickets"),
     route: "own-tickets",
     concernsAuth: false,
   },
@@ -60,8 +60,9 @@ const items = ref([
         v-if="item.concernsAuth"
         :to="windowLocation.substring(1, windowLocation.length) || '/'"
         class="flex-1 hover:bg-red-500 bg-red-400 flex items-center justify-left lg:justify-center cursor-pointer p-4 lg:w-40 lg:rounded-lg h-10 lg:m-2"
-        ><span v-if="!isAuthenticated" @click="loginWithRedirect"> log in </span
-        ><span v-else @click="logout">log out</span></router-link
+        ><span v-if="!isAuthenticated" @click="loginWithRedirect">
+          {{ t("nav.logIn") }} </span
+        ><span v-else @click="logout"> {{ t("nav.logOut") }}</span></router-link
       >
     </template>
   </MegaMenu>

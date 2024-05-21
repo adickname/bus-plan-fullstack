@@ -1,0 +1,34 @@
+{
+  "nav": {
+    "home": "Home",
+    "findBus": "Find bus",
+    "order": "Order",
+    "ownTickets": "Own Tickets",
+    "logIn": "Log in ",
+    "logOut": "Log out"
+  },
+  "form":{
+    "start":"Start",
+    "destination":"Destination",
+    "checkAll":"check all",
+    "uncheckAll":"uncheck all",
+    "findBus":"find bus",
+    "name":"Name",
+    "surname":"Surname",
+    "age":"Age",
+    "oneWay":"One way",
+    "roundTrip":"Round trip",
+    "oneDay":"One day",
+    "monthly":"Monthly",
+    "begin":"Begin",
+    "clear":"clear",
+    "findCompanies":"Find companies",
+    "order":"Order"
+  },
+  "tickets":{
+    "price":"Price",
+    "dateOfIssue":"Date of issue",
+    "dateOfExpiry":"Date of expiry",
+    "noTickets":" You have not any tickets"
+  }
+}
