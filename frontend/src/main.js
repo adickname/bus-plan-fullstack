@@ -2,8 +2,9 @@ import { createApp } from "vue";
 import PrimeVue from "primevue/config";
 import { createPinia } from "pinia";
 import { createAuth0 } from "@auth0/auth0-vue";
-import { createI18n } from "vue-i18n";
+import { createI18n, useI18n } from "vue-i18n";
 import en from "./locales/en.json";
+import pl from "./locales/pl.json";
 import "primevue/resources/themes/lara-dark-indigo/theme.css";
 import "tailwindcss/tailwind.css";
 
@@ -30,10 +31,11 @@ app.use(
     },
   })
 );
+
 const i18n = createI18n({
-  locale: navigator.language,
+  locale: localStorage.getItem("language") || navigator.language,
   fallbackLocale: "en",
-  messages: { en },
+  messages: { pl, en },
   legacy: false,
 });
-app.use(router).use(i18n).use(vuetify).use(PrimeVue).use(pinia).mount("#app");
+app.use(router).use(PrimeVue).use(i18n).use(vuetify).use(pinia).mount("#app");

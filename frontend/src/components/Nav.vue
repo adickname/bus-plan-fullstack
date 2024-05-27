@@ -4,27 +4,29 @@ import { RouterLink } from "vue-router";
 import { ref } from "vue";
 import MegaMenu from "primevue/megamenu";
 import { useI18n } from "vue-i18n";
+import LanguageSwitcher from "./LanguageSwitcher.vue";
 const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
 const windowLocation = ref(window.location.pathname);
 const { t } = useI18n();
+
 const items = ref([
   {
-    label: t("nav.home"),
+    label: "nav.home",
     route: "home",
     concernsAuth: false,
   },
   {
-    label: t("nav.findBus"),
+    label: "nav.findBus",
     route: "find",
     concernsAuth: false,
   },
   {
-    label: t("nav.order"),
+    label: "nav.order",
     route: "order",
     concernsAuth: false,
   },
   {
-    label: t("nav.ownTickets"),
+    label: "nav.ownTickets",
     route: "own-tickets",
     concernsAuth: false,
   },
@@ -54,7 +56,7 @@ const items = ref([
         v-if="!item.concernsAuth"
         class="flex-1 hover:bg-red-500 bg-red-400 flex items-center justify-left lg:justify-center cursor-pointer p-4 lg:w-40 lg:rounded-lg h-10 lg:m-2"
       >
-        <span>{{ item.label }}</span>
+        <span>{{ t(item.label) }}</span>
       </router-link>
       <router-link
         v-if="item.concernsAuth"
@@ -64,6 +66,9 @@ const items = ref([
           {{ t("nav.logIn") }} </span
         ><span v-else @click="logout"> {{ t("nav.logOut") }}</span></router-link
       >
+    </template>
+    <template #end>
+      <LanguageSwitcher></LanguageSwitcher>
     </template>
   </MegaMenu>
 </template>

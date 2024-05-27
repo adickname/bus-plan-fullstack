@@ -48,7 +48,9 @@ const { user } = useAuth0();
       </v-row>
       <v-row>
         <v-col>
-          <v-btn type="reset" @click="resetInputs()" class=""> clear </v-btn>
+          <v-btn type="reset" @click="resetInputs()" class="">
+            {{ t("form.clear") }}
+          </v-btn>
           <v-btn
             @click="findCompaniesToOrder(getDestination, getStart)"
             v-if="getDestination && getStart"
