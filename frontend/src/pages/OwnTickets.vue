@@ -39,6 +39,7 @@ const findTcikets = async () => {
 findTcikets();
 </script>
 <template>
+  <button>Actual</button>
   <v-container>
     <p v-if="ticketsRef.length === 0">
       {{ t("tickets.noTickets") }}
@@ -46,7 +47,23 @@ findTcikets();
     <div
       class="flex flex-wrap justify-center md:justify-between md:m-6 md:text-lg"
     >
-      <div class="m-4" v-for="ticket in ticketsRef">
+      <div
+        class="m-4"
+        v-for="ticket in ticketsRef.filter((ticket) => {
+          let dateArray = ticket.dateOfExpiry.split('-');
+          console.log(dateArray);
+          const ticketTime = new Date(
+            dateArray[0],
+            dateArray[1] - 1,
+            dateArray[2]
+          ).getTime();
+          const userTime = new Date().getTime();
+          if (ticketTime >= userTime) {
+            return ticket;
+          } else {
+          }
+        })"
+      >
         <Card
           class="ticket"
           :pt="{
