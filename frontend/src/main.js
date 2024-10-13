@@ -5,7 +5,7 @@ import { createAuth0 } from "@auth0/auth0-vue";
 import { createI18n, useI18n } from "vue-i18n";
 import en from "./locales/en.json";
 import pl from "./locales/pl.json";
-import "primevue/resources/themes/lara-dark-indigo/theme.css";
+import Aura from "@primevue/themes/aura";
 import "tailwindcss/tailwind.css";
 
 import App from "./App.vue";
@@ -38,4 +38,19 @@ const i18n = createI18n({
   messages: { pl, en },
   legacy: false,
 });
-app.use(router).use(PrimeVue).use(i18n).use(vuetify).use(pinia).mount("#app");
+app
+  .use(router)
+  .use(PrimeVue, {
+    theme: {
+      preset: Aura,
+      options: {
+        prefix: "p",
+        darkModeSelector: "system",
+        cssLayer: false,
+      },
+    },
+  })
+  .use(i18n)
+  .use(vuetify)
+  .use(pinia)
+  .mount("#app");

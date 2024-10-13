@@ -1,4 +1,5 @@
 <script setup>
+import Button from "primevue/button";
 import { useAuth0 } from "@auth0/auth0-vue";
 import Card from "primevue/card";
 import { ref } from "vue";
@@ -6,7 +7,7 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 const ticketsRef = ref([]);
 const { user } = useAuth0();
-
+const ticketsStatus = ref("all");
 const emit = defineEmits([
   "setDisplayMessage",
   "setMessageRef",
@@ -18,7 +19,7 @@ const setPropertiesOfMessage = (message, severity) => {
   emit("setSeverityRef", severity);
 };
 
-const findTcikets = async () => {
+const findTickets = async () => {
   try {
     const res = await fetch(
       `${import.meta.env.VITE_API_SERVER_URL}/api/orders/find`,
@@ -36,10 +37,32 @@ const findTcikets = async () => {
     setPropertiesOfMessage(error.message, "error");
   }
 };
-findTcikets();
+
+const changeTicketsStatus = (status) => {
+  ticketsStatus.value = status;
+  findTickets();
+};
+
+findTickets();
 </script>
 <template>
-  <button>Actual</button>
+  <v-container>
+    <Button
+      label="Active"
+      class="mx-2"
+      @click="changeTicketsStatus('active')"
+    ></Button>
+    <Button
+      label="All"
+      class="mx-2"
+      @click="changeTicketsStatus('all')"
+    ></Button>
+    <Button
+      label="Expired"
+      class="mx-2"
+      @click="changeTicketsStatus('expired')"
+    ></Button>
+  </v-container>
   <v-container>
     <p v-if="ticketsRef.length === 0">
       {{ t("tickets.noTickets") }}
@@ -58,12 +81,24 @@ findTcikets();
             dateArray[2]
           ).getTime();
           const userTime = new Date().getTime();
-          if (ticketTime >= userTime) {
-            return ticket;
-          } else {
+          //userTime >= ticketTime?
+          // filtering should be just after downloading in findTickets function
+          if (ticketsStatus === 'all') {
+            return true;
+          } else if (ticketsStatus === 'expired') {
+            if (userTime > ticketTime) {
+              console.log('expired');
+              return true;
+            }
+          } else if (userTime <= ticketTime) {
+            console.log('active');
+            return true;
           }
         })"
       >
+        <!--  <div
+        class="m-4"
+        v-for="ticket in ticketsRef.filter"></div> -->
         <Card
           class="ticket"
           :pt="{
