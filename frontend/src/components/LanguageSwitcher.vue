@@ -2,8 +2,8 @@
 import Dropdown from "primevue/dropdown";
 import { watch, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { useChangeCalendarLanguageStore } from "@/store/changeCalendarLanguageStore";
-const calendarLanguage = useChangeCalendarLanguageStore();
+import { useChangeDatePickerLanguageStore } from "@/store/changeDatePickerLanguageStore";
+const calendarLanguage = useChangeDatePickerLanguageStore();
 const { changeChange } = calendarLanguage;
 const { locale } = useI18n();
 const countries = [
