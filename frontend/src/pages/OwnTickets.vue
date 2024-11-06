@@ -4,7 +4,7 @@ import { useAuth0 } from "@auth0/auth0-vue";
 import Card from "primevue/card";
 import { ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { useMessageStore } from "@/stores/messageStore";
+import { useMessageStore } from "@/store/messageStore";
 const messageStore = useMessageStore();
 const { changeMessage, changeSeverity, changeShouldBeDisplayed } = messageStore;
 const { t } = useI18n();
