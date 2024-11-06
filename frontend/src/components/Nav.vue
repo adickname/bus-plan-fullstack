@@ -63,7 +63,7 @@ const items = ref([
         :to="windowLocation.substring(1, windowLocation.length) || '/'"
         class="flex-1 hover:bg-red-500 bg-red-400 flex items-center justify-left lg:justify-center cursor-pointer p-4 lg:w-40 lg:rounded-lg h-10 lg:m-2"
         ><span v-if="!isAuthenticated" @click="loginWithRedirect">
-          {{ t("nav.logIn") }} </span
+          {{ t("nav.logIn") }}</span
         ><span v-else @click="logout"> {{ t("nav.logOut") }}</span></router-link
       >
     </template>

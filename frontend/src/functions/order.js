@@ -136,7 +136,6 @@ export const order = async (sub) => {
         );
         const dataRes = await res.json();
         if (dataRes.message) {
-          console.log(66);
           changeMessage("added succesfully");
           changeSeverity("info");
           changeShouldBeDisplayed(true);
