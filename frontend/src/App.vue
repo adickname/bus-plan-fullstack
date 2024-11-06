@@ -2,7 +2,7 @@
 import { RouterView } from "vue-router";
 import Nav from "./components/Nav.vue";
 import Comunicat from "@/components/Comunicat.vue";
-import { useMessageStore } from "./stores/messageStore";
+import { useMessageStore } from "./store/messageStore";
 const messageStore = useMessageStore();
 const {
   getMessage,
