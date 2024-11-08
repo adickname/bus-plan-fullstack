@@ -27,7 +27,7 @@ watch(selectedLanguage, (newValue) => {
   >
     <template #value="slotProps">
       <span>
-        <img :src="'/public/assets/languages.png'" alt="languages" />
+        <img :src="'assets/languages.png'" alt="languages" />
       </span>
     </template>
     <template #option="slotProps">
