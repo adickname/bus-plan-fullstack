@@ -1,41 +1,36 @@
-export const order = async (
-  company,
-  oneWay,
-  typeTicket,
-  age,
-  name,
-  end,
-  start,
-  surname,
-  dateOfIssue,
-  sub
-) => {
+import { useOrderStore } from "@/store/orderStore.js";
+import { useFindBusStore } from "@/store/findBusStore";
+import { useMessageStore } from "@/store/messageStore";
+const findBusStore = useFindBusStore();
+const { getStart, getDestination } = findBusStore;
+const orderStore = useOrderStore();
+let {
+  getName,
+  getSurname,
+  getAge,
+  getOneWay,
+  getDateOfIssue,
+  getCompany,
+  getTypeTicket,
+} = orderStore;
+const messageStore = useMessageStore();
+const { changeMessage, changeSeverity, changeShouldBeDisplayed } = messageStore;
+export const order = async (sub) => {
   let minDistance = 0;
   let distance;
   let dataPrice;
   let dateOfExpiry;
   let reducedPrice;
-  console.log(
-    company,
-    oneWay,
-    typeTicket,
-    age,
-    name,
-    end,
-    start,
-    surname,
-    dateOfIssue,
-    sub
-  );
-  if (typeTicket === "day") {
-    dateOfIssue = `${dateOfIssue.getFullYear()}-${(dateOfIssue.getMonth() + 1)
+  let dateIssue = getDateOfIssue.value;
+  if (getTypeTicket === "day") {
+    dateIssue = `${dateIssue.getFullYear()}-${(dateIssue.getMonth() + 1)
       .toString()
-      .padStart(2, "0")}-${dateOfIssue.getDate()}`;
-    dateOfExpiry = dateOfIssue;
+      .padStart(2, "0")}-${getDateOfIssue.value.getDate()}`;
+    dateOfExpiry = getDateOfIssue.value;
   }
-  if (typeTicket === "month") {
-    const data = new Date(dateOfIssue);
-    dateOfIssue = `${data.getFullYear()}-${(data.getMonth() + 1)
+  if (getTypeTicket.value === "month") {
+    const data = new Date(dateIssue);
+    dateIssue = `${data.getFullYear()}-${(data.getMonth() + 1)
       .toString()
       .padStart(2, "0")}-${data.getDate().toString().padStart(2, "0")}`;
     dateOfExpiry = new Date(data.getFullYear(), data.getMonth() + 1, 0);
@@ -48,22 +43,22 @@ export const order = async (
 
   try {
     const res = await fetch(
-      `${
-        import.meta.env.VITE_API_SERVER_URL
-      }/api/orders/prices?company=${company}`
+      `${import.meta.env.VITE_API_SERVER_URL}/api/orders/prices?company=${
+        getCompany.value
+      }`
     );
     dataPrice = await res.json();
     let multiplierTypeTicket;
-    let multiplierOneWay;
-    if (oneWay) {
-      if (oneWay === true) {
-        multiplierOneWay = 1;
+    let multipliergetOneWay;
+    if (getOneWay.value) {
+      if (getOneWay.value === true) {
+        multipliergetOneWay = 1;
       } else {
-        multiplierOneWay = 2;
+        multipliergetOneWay = 2;
       }
     }
-    if (typeTicket) {
-      switch (typeTicket) {
+    if (getTypeTicket.value) {
+      switch (getTypeTicket.value) {
         case "day":
           multiplierTypeTicket = await dataPrice.price;
           break;
@@ -75,7 +70,7 @@ export const order = async (
           break;
       }
     }
-    if (age < 18) {
+    if (getAge.value < 18) {
       multiplierTypeTicket /= 100;
       multiplierTypeTicket *= 51;
     }
@@ -101,45 +96,49 @@ export const order = async (
       }
     });
     try {
-      console.log(99);
-      if (age < 18) {
+      if (getAge.value < 18) {
         reducedPrice =
-          ((minDistance * multiplierTypeTicket) / 100) * 49 * multiplierOneWay;
+          ((minDistance * multiplierTypeTicket) / 100) *
+          49 *
+          multipliergetOneWay;
       } else {
         reducedPrice = 0;
       }
-
       try {
-        console.log(88);
-        await fetch(`${import.meta.env.VITE_API_SERVER_URL}/api/orders/new`, {
-          method: "POST",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify({
-            owner: sub,
-            name: name,
-            surname: surname,
-            age: age,
-            company: company,
-            distance: minDistance,
-            end: end,
-            start: start,
-            fakePrice: (
-              minDistance *
-              multiplierTypeTicket *
-              multiplierOneWay
-            ).toFixed(),
-            reducedPrice: reducedPrice.toFixed(),
-            dateOfIssue: dateOfIssue,
-            dateOfExpiry: `${dateOfExpiry}`,
-            typeTicket: typeTicket,
-            oneWay: oneWay,
-          }),
-        });
+        const res = await fetch(
+          `${import.meta.env.VITE_API_SERVER_URL}/api/orders/new`,
+          {
+            method: "POST",
+            headers: {
+              "Content-type": "application/json",
+            },
+            body: JSON.stringify({
+              owner: sub,
+              name: getName.value,
+              surname: getSurname.value,
+              age: getAge.value,
+              company: getCompany.value,
+              distance: minDistance,
+              end: getDestination.value,
+              start: getStart.value,
+              fakePrice: (
+                minDistance *
+                multiplierTypeTicket *
+                multipliergetOneWay
+              ).toFixed(),
+              reducedPrice: reducedPrice.toFixed(),
+              dateOfIssue: dateIssue,
+              dateOfExpiry: `${dateOfExpiry}`,
+              typeTicket: getTypeTicket.value,
+              oneWay: getOneWay.value,
+            }),
+          }
+        );
         const dataRes = await res.json();
         if (dataRes.message) {
-          return "added succesfully";
+          changeMessage("added succesfully");
+          changeSeverity("info");
+          changeShouldBeDisplayed(true);
         }
       } catch (error) {
         return error.message;

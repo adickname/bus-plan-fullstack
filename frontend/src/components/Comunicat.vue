@@ -1,6 +1,6 @@
 <template>
-    <Message :severity="props.severity" :life="2000" @close="setDisplayMessage" @life-end="setDisplayMessage"
-        :sticky="false">
+    <Message :severity="props.severity" :life="2000" @close="handleChangeShouldBeDisplayed"
+        @life-end="handleChangeShouldBeDisplayed" :sticky="false">
         {{
             props.message
         }}
@@ -10,8 +10,8 @@
 <script setup>
 import Message from 'primevue/message';
 const props = defineProps(['severity', 'message'])
-const emit = defineEmits(['setDisplayMessage'])
-const setDisplayMessage = () => {
-    emit('setDisplayMessage', false)
+const emit = defineEmits(['handleChangeShouldBeDisplayed'])
+const handleChangeShouldBeDisplayed = () => {
+    emit('handleChangeShouldBeDisplayed')
 }
 </script>

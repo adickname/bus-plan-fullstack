@@ -1,0 +1,35 @@
+{
+  "nav": {
+    "home": "Strona główna",
+    "findBus": "Znajdź linię",
+    "order": "Zamów",
+    "ownTickets": "Moje bielty",
+    "logIn": "Zaloguj",
+    "logOut": "Wyloguj"
+  },
+    "form":{
+      "start":"Start",
+      "destination":"Kierunek",
+      "checkAll":"zaznacz wszystkie",
+      "uncheckAll":"odznacz wszystkie",
+      "findBus":"znajdź linię",
+      "name":"Imię",
+      "surname":"Nazwisko",
+      "age":"Wiek",
+      "oneWay":"W jedną stronę",
+      "roundTrip":"W obie strony",
+      "oneDay":"Jednodniowy",
+      "monthly":"Miesięczny",
+      "begin":"Początek",
+      "clear":"Reset",
+      "findCompanies":"Znajdź firmy",
+      "order":"Zamawiam"
+    },
+    "tickets":{
+      "price":"Cena",
+      "dateOfIssue":"Data wydania",
+      "dateOfExpiry":"Data wygaśnięcia",
+      "noTickets":"Nie masz żadnych biletów"
+    }
+  }
+  
