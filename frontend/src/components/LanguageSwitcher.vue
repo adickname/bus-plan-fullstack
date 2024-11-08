@@ -34,7 +34,7 @@ watch(selectedLanguage, (newValue) => {
       <div class="flex align-items-center">
         <img
           :alt="slotProps.option.label"
-          :src="`/public/assets/${slotProps.option.code}.png`"
+          :src="`assets/${slotProps.option.code}.png`"
           :class="`mr-2 flag
         flag-${slotProps.option.code.toLowerCase()}`"
           style="width: 18px"
