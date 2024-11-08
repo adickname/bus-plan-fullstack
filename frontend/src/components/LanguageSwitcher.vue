@@ -27,14 +27,14 @@ watch(selectedLanguage, (newValue) => {
   >
     <template #value="slotProps">
       <span>
-        <img :src="'assets/languages.png'" alt="languages" />
+        <img :src="'/public/assets/languages.png'" alt="languages" />
       </span>
     </template>
     <template #option="slotProps">
       <div class="flex align-items-center">
         <img
           :alt="slotProps.option.label"
-          :src="`assets/${slotProps.option.code}.png`"
+          :src="`/public/assets/${slotProps.option.code}.png`"
           :class="`mr-2 flag
         flag-${slotProps.option.code.toLowerCase()}`"
           style="width: 18px"
