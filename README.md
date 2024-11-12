@@ -1,6 +1,13 @@
 # bus-plan
 
-This template should help get you started developing with Vue 3 in Vite.
+This template should help get you started developing with Vue 3 in Vite and tell you somethink about technologies used in the project.
+
+## Technologies
+Vue.js for creating user interface
+Pinia for state management
+MongoDB Atlas Database for storing data
+Express.js for building API interface
+Auth0 for authentication users
 
 ## Recommended IDE Setup
 
