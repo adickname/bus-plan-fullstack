@@ -1,3 +1,4 @@
+<!-- INCOMPLETE HTML5 STRUCTURE -->
 <script setup>
 import { useAuth0 } from "@auth0/auth0-vue";
 import { ref, onMounted, watch } from "vue";

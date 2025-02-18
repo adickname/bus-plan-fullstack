@@ -1,8 +1,8 @@
 <script setup>
-import Calendar from "primevue/calendar";
-import { useChangeCalendarLanguageStore } from "@/store/changeCalendarLanguageStore";
-const calendarLanguage = useChangeCalendarLanguageStore();
-const { getChange } = calendarLanguage;
+import DatePicker from "primevue/datepicker";
+import { useChangeDatePickerLanguageStore } from "@/store/changeDatePickerLanguageStore";
+const DatePickerLanguage = useChangeDatePickerLanguageStore();
+const { getChange } = DatePickerLanguage;
 import { watch, ref } from "vue";
 import { useOrderStore } from "@/store/orderStore";
 import { useI18n } from "vue-i18n";
@@ -80,18 +80,24 @@ onUpdated(() => {
     <v-col cols="12" md="4">
       <p>{{ t("form.begin") }}</p>
       <template v-if="getTypeTicket === 'day'">
-        <Calendar
+        <DatePicker
           v-model="dateOfIssue"
-          :pt="{ root: { class: 'border-2 border-white' } }"
+          :pt="{
+            root: { class: 'border-2 border-white' },
+            panel: { class: 'z-10 bg-black' },
+          }"
           showIcon
           :showOnFocus="false"
           date-format="mm/dd/yy"
         />
       </template>
       <template v-if="getTypeTicket === 'month'">
-        <Calendar
+        <DatePicker
           v-model="dateOfIssue"
-          :pt="{ root: { class: 'border-2 border-white' } }"
+          :pt="{
+            root: { class: 'border-2 border-white' },
+            panel: { class: 'z-10 bg-black' },
+          }"
           showIcon
           :showOnFocus="false"
           view="month"

@@ -1,3 +1,4 @@
+<!-- INCOMPLETE HTML5 STRUCTURE -->
 <script setup>
 import Schedule from "../components/Schedule.vue";
 import { defineAsyncComponent } from "vue";
@@ -16,25 +17,29 @@ const { getSchedule, getIsDataDownloaded } = scheduleStore;
 const { findBusLine } = findBusStore;
 </script>
 <template>
-  <v-form>
-    <v-container>
-      <v-row>
-        <StartDestinationInputs></StartDestinationInputs>
-      </v-row>
-      <v-row>
-        <CompaniesCheckboxes></CompaniesCheckboxes>
-      </v-row>
+  <section>
+    <article>
+      <v-form>
+        <v-container>
+          <v-row>
+            <StartDestinationInputs></StartDestinationInputs>
+          </v-row>
+          <v-row>
+            <CompaniesCheckboxes></CompaniesCheckboxes>
+          </v-row>
 
-      <v-row>
-        <v-btn @click="findBusLine()" class="my-2 mx-2">
-          {{ t("form.findBus") }}
-        </v-btn>
-      </v-row>
-      <v-row>
-        <template v-if="getIsDataDownloaded === true">
-          <Schedule :schedule="getSchedule"></Schedule>
-        </template>
-      </v-row>
-    </v-container>
-  </v-form>
+          <v-row>
+            <v-btn @click="findBusLine()" class="my-2 mx-2">
+              {{ t("form.findBus") }}
+            </v-btn>
+          </v-row>
+          <v-row>
+            <template v-if="getIsDataDownloaded === true">
+              <Schedule :schedule="getSchedule"></Schedule>
+            </template>
+          </v-row>
+        </v-container>
+      </v-form>
+    </article>
+  </section>
 </template>

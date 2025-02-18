@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 
-export const useChangeCalendarLanguageStore = defineStore(
+export const useChangeDatePickerLanguageStore = defineStore(
   "language store",
   () => {
     const change = ref(false);
