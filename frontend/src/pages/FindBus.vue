@@ -18,28 +18,29 @@ const { findBusLine } = findBusStore;
 </script>
 <template>
   <section>
-    <article>
-      <v-form>
-        <v-container>
+    <v-form>
+      <v-container>
+        <article>
           <v-row>
             <StartDestinationInputs></StartDestinationInputs>
           </v-row>
           <v-row>
             <CompaniesCheckboxes></CompaniesCheckboxes>
           </v-row>
-
           <v-row>
             <v-btn @click="findBusLine()" class="my-2 mx-2">
               {{ t("form.findBus") }}
             </v-btn>
           </v-row>
+        </article>
+        <article>
           <v-row>
             <template v-if="getIsDataDownloaded === true">
               <Schedule :schedule="getSchedule"></Schedule>
             </template>
           </v-row>
-        </v-container>
-      </v-form>
-    </article>
+        </article>
+      </v-container>
+    </v-form>
   </section>
 </template>
